@@ -2,9 +2,9 @@
 <package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>    
     <id>Proxem.NumNet</id>
-    <version>1.5.0</version>
+    <version>1.5.1</version>
     <title>NumNet</title>
-    <iconUrl>https://github.com/Proxem/NumNet/blob/master/logo/proxem.png</iconUrl>
+    <iconUrl>https://github.com/Proxem/NumNet/blob/master/logo/proxem.png?raw=true</iconUrl>
     <authors>Guillaume Wenzek, Jocelyn Coulmance, Thomas Perrais, Jean-Marc Marty</authors>
     <owners>Proxem</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -19,7 +19,7 @@
     <tags>arrays linear-algebra</tags>
     <summary>Scientific package for Linear algebra operations on matrices</summary>
     <dependencies>
-      <dependency id="Proxem.BlasNet" version="1.5.0"  />
+      <dependency id="Proxem.BlasNet" version="1.5.1"  />
     </dependencies>
   </metadata>
   <files>
