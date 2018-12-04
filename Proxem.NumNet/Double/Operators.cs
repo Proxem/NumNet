@@ -1,0 +1,59 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Real = System.Double;
+
+namespace Proxem.NumNet.Double
+{
+    public class Operators : Operators<Real>
+    {
+        public override Real Convert(int i) => i;
+
+        public override Real Parse(string s) => Real.Parse(s, CultureInfo.InvariantCulture);
+
+        public override sealed Real Add(Real a, Real b) => a + b;
+        public override sealed Array<Real> Add(Array<Real> a, Array<Real> b) => a.Add(b);
+        // todo: optimize Array + Real with 'vadd' ?
+
+        public override sealed Real Mul(Real a, Real b) => a * b;
+        public override sealed Array<Real> Mul(Real alpha, Array<Real> a) => a.Scale(alpha);
+        public override sealed Array<Real> Mul(Array<Real> a, Real alpha) => a.Scale(alpha);
+        public override sealed Array<Real> Mul(Array<Real> a, Array<Real> b) => a.Mul(b);
+
+        public override sealed Real Sub(Real a, Real b) => a - b;
+        public override sealed Array<Real> Sub(Array<Real> a, Array<Real> b) => a.Add(b, alpha: -1);
+
+        public override sealed Real Div(Real a, Real b) => a / b;
+        public override sealed Array<Real> Div(Array<Real> a, Array<Real> b) => a.Div(b);
+        public override sealed Array<Real> Div(Array<Real> a, Real b) => a * (1 / b);
+
+        public override Real Neg(Real a) => -a;
+
+        public override Real Gt(Real a, Real b) => a > b ? 1 : 0;
+
+        public override Real GtEq(Real a, Real b) => a >= b ? 1 : 0;
+    }
+}

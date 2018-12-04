@@ -1,0 +1,138 @@
+{
+	"build_systems":
+	[
+        {
+            "name": "Build solution",
+            "selector": ["source.cs", "source.msbuild"],
+            "working_dir": "$project_path",
+            "cmd":
+            [
+                "msbuild",
+                "./$project_base_name.sln"
+            ],
+            "file_regex": "^\\s*(.+?)\\(([0-9]+),?([0-9]+)?\\):\\s*(.*) \\[",
+            "shell": true,
+            "windows":
+            {
+                "path": "%PATH%;C:\\Program Files (x86)\\MSBuild\\14.0\\Bin"
+            },
+        },
+        {
+            "name": "Rebuild solution",
+            "selector": ["source.cs", "source.msbuild"],
+            "working_dir": "$project_path",
+            "cmd":
+            [
+                "msbuild",
+                "./$project_base_name.sln",
+                "/t:Rebuild"
+            ],
+            "file_regex": "^\\s*(.+?)\\(([0-9]+),?([0-9]+)?\\):\\s*(.*) \\[",
+            "shell": true,
+            "windows":
+            {
+                "path": "%PATH%;C:\\Program Files (x86)\\MSBuild\\14.0\\Bin"
+            },
+        },
+        {
+            "name": "Run all unit tests",
+            "selector": "source.cs",
+            "working_dir": "$project_path",
+            "cmd":
+            [
+                "C:/Program Files (x86)/Microsoft Visual Studio 14.0/Common7/IDE/CommonExtensions/Microsoft/TestWindow/vstest.console.exe",
+                "/Settings:./Test.runsettings",
+                "../build/debug/$project_base_name.Test.dll"
+            ],
+            "file_regex": "^\\s*at .* in (.*):line ([0-9]+)",
+            "shell": true,
+        },
+        {
+            "name": "Run unit tests from file",
+            "selector": "source.cs",
+            "working_dir": "$project_path",
+            "cmd":
+            [
+                "C:/Program Files (x86)/Microsoft Visual Studio 14.0/Common7/IDE/CommonExtensions/Microsoft/TestWindow/vstest.console.exe",
+                "/Settings:./Test.runsettings",
+                "/Tests:$file_base_name",
+                "../build/debug/$project_base_name.Test.dll"
+            ],
+            "file_regex": "^\\s*at .* in (.*):line ([0-9]+)",
+            "shell": true,
+        },
+        {
+            "name": "Sphinx make html",
+            "selector": "text.restructuredtext",
+            "working_dir": "$project_path\\..\\doc",
+            "cmd": ["%SPHINXBUILD%", "-b", "html", "-d", "_build/doctrees", ".", "_build/html"],
+            "shell": true,
+            "file_regex": "^\\s*(.*):([0-9]+):",
+        },
+		{
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Anaconda Python Builder",
+			"selector": "source.python",
+			"shell_cmd": "python -u \"$file\""
+		}
+	],
+	"folders":
+	[
+		{
+            "path": ".",
+            "folder_exclude_patterns":
+            [
+                "obj",
+                "bin",
+                ".vs",
+                "*.sln.ide",
+                "TestResults"
+            ],
+        },
+        {
+            "path": "..\\Proxem.NumNet.Basic",
+            "folder_exclude_patterns":
+            [
+                "obj",
+                "bin",
+                ".vs",
+                "packages",
+                "*.sln.ide",
+                "TestResults"
+            ],
+        },
+        {
+            "path": "..\\Proxem.NumNet.Test",
+            "folder_exclude_patterns":
+            [
+                "obj",
+                "bin",
+                ".vs",
+                "packages",
+                "*.sln.ide",
+                "TestResults"
+            ],
+        },
+        {
+            "path": "..\\Proxem.NumNet.HDF5",
+            "folder_exclude_patterns":
+            [
+                "obj",
+                "bin",
+                ".vs",
+                "packages",
+                "*.sln.ide",
+                "TestResults"
+            ],
+        },
+        {
+            "path": "..\\doc",
+            "folder_exclude_patterns":
+            [
+                "_*"
+            ],
+        },
+    ],
+
+	"solution_file": "./Proxem.NumNet.sln"
+}
