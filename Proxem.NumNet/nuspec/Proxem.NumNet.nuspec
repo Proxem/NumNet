@@ -4,7 +4,7 @@
     <id>Proxem.NumNet</id>
     <version>1.5.0</version>
     <title>NumNet</title>
-    <iconUrl>https://github.com/Proxem/NumNet/tree/master/logo/proxem.jpg</iconUrl>
+    <iconUrl>https://github.com/Proxem/NumNet/blob/master/logo/proxem.png</iconUrl>
     <authors>Guillaume Wenzek, Jocelyn Coulmance, Thomas Perrais, Jean-Marc Marty</authors>
     <owners>Proxem</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
