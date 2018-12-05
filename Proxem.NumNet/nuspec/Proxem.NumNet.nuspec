@@ -2,24 +2,26 @@
 <package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>    
     <id>Proxem.NumNet</id>
-    <version>1.5.1</version>
+    <version>1.5.2</version>
     <title>NumNet</title>
+    <licenseUrl>https://github.com/Proxem/NumNet/blob/master/LICENSE</licenseUrl>
     <iconUrl>https://github.com/Proxem/NumNet/blob/master/logo/proxem.png?raw=true</iconUrl>
-    <authors>Guillaume Wenzek, Jocelyn Coulmance, Thomas Perrais, Jean-Marc Marty</authors>
+    <projectUrl>https://github.com/Proxem/NumNet</projectUrl>
+    <authors>Guillaume Wenzek, Jocelyn Coulmance, Thomas Perrais, Amine Benhalloum, Jean-Marc Marty</authors>
     <owners>Proxem</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
         C# scientific package containing among other things :
-            * an N-dimensionnal array object and the main functions to operate on it
-            * the main linear algebra functions on n-dimensionnal arrays. 
-        The synthax is mainly based on python's numpy library. MKL is used for optimized performances.
+            * an N-dimensional array object and the main functions to operate on it
+            * the main linear algebra functions on N-dimensional arrays. 
+        The syntax is mainly based on python's numpy library. MKL is used for optimized performances.
     </description>
     <releaseNotes></releaseNotes>
     <copyright></copyright>
-    <tags>arrays linear-algebra</tags>
+    <tags>arrays linear-algebra numpy machine-learning matrix</tags>
     <summary>Scientific package for Linear algebra operations on matrices</summary>
     <dependencies>
-      <dependency id="Proxem.BlasNet" version="1.5.1"  />
+      <dependency id="Proxem.BlasNet" version="1.5.2"  />
     </dependencies>
   </metadata>
   <files>

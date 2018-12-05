@@ -1,6 +1,6 @@
 # NumNet
-NumNet is an optimized library for matrix operations and scientific programming written in C\# and developped at [Proxem](https://proxem.com).
-NumNet is inspired by python's [numpy](http://www.numpy.org/) library to facilitate its use by python developpers.
+NumNet is an optimized library for matrix operations and scientific programming written in C\# and developed at [Proxem](https://proxem.com).
+NumNet is inspired by python's [numpy](http://www.numpy.org/) library to facilitate its use by python developers.
 
 ## Table of contents
 
@@ -15,11 +15,11 @@ NumNet is inspired by python's [numpy](http://www.numpy.org/) library to facilit
 
 ## Requirements
 
-NumNet was developped in .Net Standard 2.0 and is compatible with both .Net Framwork and .Net Core thus working on Windows and Linux platform.
+NumNet is developed in .Net Standard 2.0 and is compatible with both .Net Framework and .Net Core thus working on Windows and Linux platform.
 For Mac OS users there shouldn't be any problem but we didn't test extensively. 
 
 NumNet relies on **BlasNet** for the low level operations on arrays.
-See [BlasNet](https://github.com/Proxem/BlasNet) documentation for further informations on how to use Intel's MKL for low level operations.
+See [BlasNet](https://github.com/Proxem/BlasNet) documentation for further information on how to use Intel's MKL for low level operations.
 
 ## Examples
 
@@ -31,7 +31,7 @@ To create an empty 2-dimensional array of dimension 3 and 4 you can use
 var zeroArray = NN.Zeros(3, 4);
 ```
 
-The follwing creates a 1-dimensional array with all even number from 0 to 40
+The following creates a 1-dimensional array with all even number from 0 to 40
 
 ```
 var range = NN.Range(0, 40, step: 2);
@@ -39,7 +39,7 @@ var range = NN.Range(0, 40, step: 2);
 
 To reshape the previous array to a 2-d dimension array use `var 2dRange = range.Reshape(4, 5);`.
 This operation will be a O(1) if possible but it might need to copy the values 
-(if the initial matrix is transposed or more generaly if the data in the initial array are not contiguous.)
+(if the initial matrix is transposed or more generally if the data in the initial array are not contiguous.)
 
 Random initializations are also supported, here are a few examples of the supported distributions
 
@@ -75,8 +75,8 @@ var v3 = M[Slicer.Range(3, -1), -2]; // [16, 22]
 
 ### Base operations
 
-The synthax for operations between multi-dimensional arrays is mostly the same as numpy (with Pascal Case).
-For instance, matrix multiplications will be done with the follwing code
+The syntax for operations between multi-dimensional arrays is mostly the same as numpy (with Pascal Case).
+For instance, matrix multiplications will be done with the following code
 
 ```
 var M = NN.Random.Normal(0, 1, 3, 4);
