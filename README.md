@@ -96,6 +96,13 @@ var v2 = M[1, From(1)]; // numpy's equivalent of M[1, 1:]
 var v3 = M[Range(3, -1), -2]; // numpy's equivalent of M[3:-1, -2]
 ```
 
+Range(start, stop) can even be abbreviated as (start, stop):
+
+```
+var v1 = M[(0, 3), Upto(2)]; // numpy's equivalent of M[0:3, :2]
+var v3 = M[(3, -1), -2]; // numpy's equivalent of M[3:-1, -2]
+```
+
 ### Basic operations
 
 The syntax for operations between multi-dimensional arrays is mostly the same as numpy (with Pascal Case).
@@ -110,6 +117,10 @@ var MMNTranspose = NN.Dot(MN.T, M) // gives a (5 x 4) matrix
 ```
 
 where `MN.T` stands for the transpose of `MN`.
+
+### More examples
+
+Please see project NumNet.Test for other examples
 
 ## Nuget Package
 

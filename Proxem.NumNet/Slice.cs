@@ -44,10 +44,11 @@ namespace Proxem.NumNet
             this.Step = step;
         }
 
-        public static implicit operator Slice(int i)
-        {
-            return Slicer.Only(i);
-        }
+        public static implicit operator Slice(int i) => Slicer.Only(i);
+
+        public static implicit operator Slice((int start, int stop) s) => Slicer.Range(s.start, s.stop);
+
+        public static implicit operator Slice((int start, int stop, int step) s) => Slicer.Range(s.start, s.stop, s.step);
 
         public bool IsSingleton()
         {

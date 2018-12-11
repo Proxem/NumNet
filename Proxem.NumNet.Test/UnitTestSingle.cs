@@ -82,9 +82,9 @@ namespace Proxem.NumNet.Test
         {
             var a = NN.Diag(1, 2, 3, 4);
             var b = NN.Diag(2, 3);
-            var c = a[Range(1, 3), Range(1, 3)];
+            var c = a[(1, 3), (1, 3)];
             AssertArray.AreEqual(c, b);
-            c = a[Range(1, -1), Range(1, -1)];
+            c = a[(1, -1), (1, -1)];
             AssertArray.AreEqual(c, b);
         }
 
