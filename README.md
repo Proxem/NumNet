@@ -73,15 +73,15 @@ var v2 = M[1, Slicer.From(1)]; // [7, 8, 9, 10, 11]
 var v3 = M[Slicer.Range(3, -1), -2]; // [16, 22]
 ```
 
-### Simplifying notation
+### Simplifying notations
 
-By using a static Slicer like in
+By using a static Slicer like
 
 ```
 using static Slicer;
 ```
 
-the samples above become
+the above samples become
 
 ```
 var vector = M[_, 0]; // '_' correspond to ':' in numpy
@@ -96,7 +96,7 @@ var v2 = M[1, From(1)]; // numpy's equivalent of M[1, 1:]
 var v3 = M[Range(3, -1), -2]; // numpy's equivalent of M[3:-1, -2]
 ```
 
-### Base operations
+### Basic operations
 
 The syntax for operations between multi-dimensional arrays is mostly the same as numpy (with Pascal Case).
 For instance, matrix multiplications will be done with the following code
