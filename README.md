@@ -122,6 +122,13 @@ where `MN.T` stands for the transpose of `MN`.
 
 Please see project NumNet.Test for other examples
 
+### Running the tests
+
+Edit Proxem.NumNet/App.config and set "mkl:path" according to where your MKL dlls are located.
+In VisualStudio, either set Test|Test settings|Default Processor Architecture to X64 or load file Test.runsettings from Test|Test settings|Select Test Settings File
+
+If no "mkl:path" is found, a default managed BLAS provider is used. Note that this provider is slow and does not implement Lapack routines.
+
 ## Nuget Package
 
 We provide a Nuget Package of **NumNet** to facilitate its use. It's available on [Nuget.org](https://www.nuget.org/packages/Proxem.NumNet/). 
