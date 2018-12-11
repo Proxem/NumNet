@@ -78,14 +78,14 @@ namespace Proxem.NumNet.Test
             var y = NN.Array<float>(1, -1, 3, 1);
 
             Array<float> txy2 = null;
-            txy2 = t[_, Until(-1), Until(-1)].Combine(x, y, result: txy2);
+            txy2 = t[_, Upto(-1), Upto(-1)].Combine(x, y, result: txy2);
 
             var txy = t.CombineWithBias(x, y);
 
             var xb = NN.Ones<float>(4);
-            xb[Until(-1)] = x;
+            xb[Upto(-1)] = x;
             var yb = NN.Ones<float>(5);
-            yb[Until(-1)] = y;
+            yb[Upto(-1)] = y;
 
             var txbyb = t.Combine(xb, yb);
 

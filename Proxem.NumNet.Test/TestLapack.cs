@@ -380,7 +380,7 @@ namespace Proxem.NumNet.Test
                 {  0.71,  0.63 },
                 {  0.13,  0.14 }
             });
-            var x = NN.Array(b).Reshape(-1, nrhs)[Until(n)];
+            var x = NN.Array(b).Reshape(-1, nrhs)[Upto(n)];
             AssertArray.AreAlmostEqual(solution, x, 1e-2, 1e-2);
 
             // Residual sum of squares for the solution

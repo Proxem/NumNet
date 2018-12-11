@@ -68,7 +68,7 @@ More control on the slices is made using the following
 
 ```
 var v0 = M[0]; // [0, 1, 2, 3, 4, 5]
-var v1 = M[Slicer.Range(0, 3), Slicer.Until(2)]; // [[0, 1],[6, 7],[12, 13]]
+var v1 = M[Slicer.Range(0, 3), Slicer.Upto(2)]; // [[0, 1],[6, 7],[12, 13]]
 var v2 = M[1, Slicer.From(1)]; // [7, 8, 9, 10, 11]
 var v3 = M[Slicer.Range(3, -1), -2]; // [16, 22]
 ```
@@ -91,7 +91,7 @@ and
 
 ```
 var v0 = M[0]; // [0, 1, 2, 3, 4, 5]
-var v1 = M[Range(0, 3), Until(2)]; // numpy's equivalent of M[0:3, :2]
+var v1 = M[Range(0, 3), Upto(2)]; // numpy's equivalent of M[0:3, :2]
 var v2 = M[1, From(1)]; // numpy's equivalent of M[1, 1:]
 var v3 = M[Range(3, -1), -2]; // numpy's equivalent of M[3:-1, -2]
 ```

@@ -121,7 +121,7 @@ namespace Proxem.NumNet.Test
             //Blas.gemv(Order.RowMajor, Proxem.BlasNet.Transpose.NoTrans, 4, 3, 1.0f, m.Values, 0, 4, v.Values, 0, 1, 0.0f, result.Values, 0, 1);
 
             //Dot with slices
-            result = m[From(1), Until(-1)].Dot(v[Until(-1)]);
+            result = m[From(1), Upto(-1)].Dot(v[Upto(-1)]);
             expected = NN.Array<float>(8, 11);
             AssertArray.AreAlmostEqual(expected, result);
 
@@ -143,8 +143,8 @@ namespace Proxem.NumNet.Test
             //Matrix dot with stride[1] != 1
             var y = NN.Array<float>(1, -1, 3, 2);
             var my = m.Dot(y);
-            var ty = t[Range(1, 3), Until(-1), -1].Dot(y);
-            AssertArray.AreAlmostEqual(t[Range(1, 3), Until(-1), -1], m);
+            var ty = t[Range(1, 3), Upto(-1), -1].Dot(y);
+            AssertArray.AreAlmostEqual(t[Range(1, 3), Upto(-1), -1], m);
             AssertArray.AreAlmostEqual(my, NN.Array<float>(7, 14));
             AssertArray.AreAlmostEqual(ty, my);
         }
@@ -784,7 +784,7 @@ namespace Proxem.NumNet.Test
             AssertArray.AreEqual(v0, NN.Copy(v));
             AssertArray.AreEqual(v0, NN.Copy<float>(v));
 
-            v[Range(2, 6)] = v[Until(4)];
+            v[Range(2, 6)] = v[Upto(4)];
             AssertArray.AreNotEqual(v0, v);
 
             var v1 = NN.Array<float>(2, 2, 2, 2, -1, 2, -1, 6, -1, 5);

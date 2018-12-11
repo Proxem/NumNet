@@ -53,12 +53,12 @@ namespace Proxem.NumNet.Test
 
             AssertArray.AreEqual(new[] { 0, 1 }, a[Range(0, 2)]);
             AssertArray.AreEqual(new[] { 1 },    a[Range(1, 2)]);
-            AssertArray.AreEqual(new[] { 0, 1 }, a[Until(2)]);
+            AssertArray.AreEqual(new[] { 0, 1 }, a[Upto(2)]);
             AssertArray.AreEqual(new[] { 2, 3 }, a[From(2)]);
 
             AssertArray.AreEqual(new[] { 0, 1 },    a[Range(0, -2)]);
             AssertArray.AreEqual(new[] { 1, 2 },    a[Range(1, -1)]);
-            AssertArray.AreEqual(new[] { 0, 1, 2 }, a[Until(-1)]);
+            AssertArray.AreEqual(new[] { 0, 1, 2 }, a[Upto(-1)]);
             AssertArray.AreEqual(new[] { 1, 2, 3 }, a[From(-3)]);
 
             Assert.AreEqual(2, a.Item[2]);
@@ -128,7 +128,7 @@ namespace Proxem.NumNet.Test
             a.Item[1, 0, 0] = 3;
             var b = NN.Ones<float>(2, 3);
             b.Item[0, 0] = 3;
-            AssertArray.AreEqual(b, a[From(1), Until(-1), 0]);
+            AssertArray.AreEqual(b, a[From(1), Upto(-1), 0]);
         }
 
         [TestMethod]
@@ -202,8 +202,8 @@ namespace Proxem.NumNet.Test
             float r = 0.5f;
             var M = NN.Random.Uniform(r, r, 40, 30).As<float>();
             var M2 = NN.Eye<float>(30).Scale(r);
-            M[Until(30), _] = M2;
-            AssertArray.AreEqual(M2, M[Until(30), _]);
+            M[Upto(30), _] = M2;
+            AssertArray.AreEqual(M2, M[Upto(30), _]);
 
             M2 = NN.Eye<float>(2).Scale(r);
 
@@ -226,8 +226,8 @@ namespace Proxem.NumNet.Test
             float r = 0.5f;
             var M = NN.Random.Uniform(r, r, 40, 30).As<float>();
             var M2 = NN.Eye<float>(30).Scale(r);
-            M[Until(30), _] = M2;
-            AssertArray.AreEqual(M2, M[Until(30), _]);
+            M[Upto(30), _] = M2;
+            AssertArray.AreEqual(M2, M[Upto(30), _]);
 
             M2 = NN.Eye<float>(2).Scale(r);
 

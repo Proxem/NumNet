@@ -48,11 +48,11 @@ namespace Proxem.NumNet.Single
             if (t.Shape[2] != x.Shape[0] + 1 && t.Shape[1] != y.Shape[0] + 1)
                 throw new ArgumentException();
 
-            result = t[_, Slicer.Until(-1), Slicer.Until(-1)].Combine21(x, y, result: result);
+            result = t[_, Slicer.Upto(-1), Slicer.Upto(-1)].Combine21(x, y, result: result);
 
             // TODO check this mess
             //var biasY = t[_, Slicer.Until(-1), -1].Dot(y);
-            t[_, Slicer.Until(-1), -1].Dot(y, result: result, beta: 1); //Doesn't work actually
+            t[_, Slicer.Upto(-1), -1].Dot(y, result: result, beta: 1); //Doesn't work actually
             //int offY = y.offset[0];
             //int offT = t.offset[0] + t.offset[1] + t.offset[2] + (t.Shape[2] - 1) * t.Stride[2];
             //for (int j = 0; j < y.Shape[0]; ++j)
@@ -63,7 +63,7 @@ namespace Proxem.NumNet.Single
             //}
 
             //var biasX = t[_, -1, Slicer.Until(-1)].Dot(x);
-            t[_, -1, Slicer.Until(-1)].Dot(x, result: result, beta: 1);
+            t[_, -1, Slicer.Upto(-1)].Dot(x, result: result, beta: 1);
 
             //var biasXY = t[_, -1, -1];
             result.Acc(t[_, -1, -1]);
@@ -76,7 +76,7 @@ namespace Proxem.NumNet.Single
         public static Slice[] SlicesWithoutBias(this Array<Real> a)
         {
             var slices = a.Slices();
-            slices[slices.Length - 1] = Slicer.Until(-1);
+            slices[slices.Length - 1] = Slicer.Upto(-1);
             return slices;
         }
 

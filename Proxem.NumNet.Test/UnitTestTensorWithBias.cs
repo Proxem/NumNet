@@ -33,7 +33,7 @@ namespace Proxem.NumNet.Test
         {
             var a = NN.Zeros<float>(3, 4);
             var id = NN.Eye<float>(3);
-            a[_, Until(-1)] = id;
+            a[_, Upto(-1)] = id;
 
             var expected = NN.Array<float>(new float[,]{
                 { 1, 0, 0, 0 },
@@ -58,7 +58,7 @@ namespace Proxem.NumNet.Test
             a = NN.Random.Uniform(-1, 1, 5).As<float>();
             b = NN.Random.Uniform(-1, 1, 4).As<float>();
             var c = NN.Ones<float>(5);
-            c[Until(4)] = b;
+            c[Upto(4)] = b;
 
             AssertArray.AreAlmostEqual(a.Dot(c), a.DotWithBias(b));
         }
@@ -67,10 +67,10 @@ namespace Proxem.NumNet.Test
         public void TestDotWithIdentity()
         {
             var a = NN.Ones<float>(4, 5);
-            a[_, Until(-1)] = NN.Eye<float>(4);
+            a[_, Upto(-1)] = NN.Eye<float>(4);
             var b = NN.Random.Uniform(-1, 1, 4).As<float>();
             var c = NN.Ones<float>(5);
-            c[Until(4)] = b;
+            c[Upto(4)] = b;
 
             var ac = a.Dot(c);
             var ab = a.DotWithBias(b);
@@ -88,7 +88,7 @@ namespace Proxem.NumNet.Test
             });
             var b = NN.Array<float>(-1, 1, 4);
             var c = NN.Ones<float>(4);
-            c[Until(-1)] = b;
+            c[Upto(-1)] = b;
 
             var ac = a.Dot(c);
             var ab = a.DotWithBias(b);
@@ -109,9 +109,9 @@ namespace Proxem.NumNet.Test
             var txy = t.CombineWithBias(x, y);
 
             var xb = NN.Ones<float>(4);
-            xb[Until(-1)] = x;
+            xb[Upto(-1)] = x;
             var yb = NN.Ones<float>(5);
-            yb[Until(-1)] = y;
+            yb[Upto(-1)] = y;
 
             var txbyb = t.Combine(xb, yb);
 

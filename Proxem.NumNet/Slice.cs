@@ -95,7 +95,7 @@ namespace Proxem.NumNet
 
         public static Slice Range(object start, int stop, int step = 1)
         {
-            if (start == null) return Until(stop, step);
+            if (start == null) return Upto(stop, step);
             throw new Exception("invalid start value");
         }
 
@@ -110,7 +110,14 @@ namespace Proxem.NumNet
             return new Slice(0, int.MaxValue, step);
         }
 
+        [Obsolete("Use Upto")]
         public static Slice Until(int stop, int step = 1)
+        {
+            if (step < 0) return new Slice(-1, stop, step);
+            else return new Slice(0, stop, step);
+        }
+
+        public static Slice Upto(int stop, int step = 1)
         {
             if (step < 0) return new Slice(-1, stop, step);
             else return new Slice(0, stop, step);

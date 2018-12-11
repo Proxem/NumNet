@@ -36,7 +36,7 @@ namespace Proxem.NumNet.Test
 
             a.AssertIsContiguous();
             a[Range(1, 3)].AssertIsContiguous();
-            a[Until(3)].AssertIsContiguous();
+            a[Upto(3)].AssertIsContiguous();
             a[From(2)].AssertIsContiguous();
             a[Only(2)].AssertIsContiguous();
 
@@ -55,11 +55,11 @@ namespace Proxem.NumNet.Test
 
             a.AssertIsContiguous();
             a[Range(1, 3)].AssertIsContiguous();
-            a[Until(3)].AssertIsContiguous();
+            a[Upto(3)].AssertIsContiguous();
             a[From(2)].AssertIsContiguous();
 
-            a[Range(1, 3), Until(3)].AssertIsNotContiguous();
-            a[Until(3), From(2)].AssertIsNotContiguous();
+            a[Range(1, 3), Upto(3)].AssertIsNotContiguous();
+            a[Upto(3), From(2)].AssertIsNotContiguous();
             a[From(2), Range(1, 3)].AssertIsNotContiguous();
             a[Only(2), Range(1, 3)].AssertIsContiguous();
 

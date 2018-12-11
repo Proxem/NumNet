@@ -302,7 +302,7 @@ namespace Proxem.NumNet
         public static Array<T> Concat<T>(int axis, Array<T>[] inputs, Array<T> result)
         {
             var slices = result.Slices();
-            slices[axis] = Slicer.Until(inputs[0].Shape[axis]);
+            slices[axis] = Slicer.Upto(inputs[0].Shape[axis]);
             var view = result[slices];
             Copy(inputs[0], view);
             var stride = view.Stride[axis];
@@ -551,7 +551,7 @@ namespace Proxem.NumNet
             if (!keepDims)
                 resultSlices[axis] = 0;
             else
-                resultSlices[axis] = Slicer.Until(1);
+                resultSlices[axis] = Slicer.Upto(1);
             var res = result[resultSlices];
 
             Array_.ElementwiseOp(thiz, selected, res,
