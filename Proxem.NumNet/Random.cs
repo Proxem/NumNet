@@ -52,10 +52,23 @@ namespace Proxem.NumNet
         public Array<T> Uniform<T>(double min, double max, params int[] shape) => NN.Fill(() => NextUniform<T>(min, max, typeof(T)), shape);
         public Array<T> Uniform<T>(double min, double max, Array<T> result) => NN.Fill(() => NextUniform<T>(min, max, typeof(T)), result);
 
+        public Array<float> Bernoulli(float p, params int[] shape)
+        {
+            return Bernoulli(p, new Array<float>(shape));
+        }
 
         public Array<double> Bernoulli(double p, params int[] shape)
         {
             return Bernoulli(p, new Array<double>(shape));
+        }
+
+        public Array<float> Bernoulli(float p, Array<float> result)
+        {
+            for (int i = 0; i < result.Values.Length; i++)      // TODO: use shape
+            {
+                result.Values[i] = Generator.NextDouble() < p ? 1 : 0;
+            }
+            return result;
         }
 
         public Array<double> Bernoulli(double p, Array<double> result)
