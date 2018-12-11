@@ -232,7 +232,7 @@ namespace Proxem.NumNet.Int32
             var slice = a.Slices(); // TODO: create a new ElementwiseOp
             for (int d = 0; d < a.Shape[axis]; ++d)
             {
-                slice[axis] = Slicer.Range(d, d + 1);
+                slice[axis] = (d, d + 1);
                 result.Acc(a[slice], alpha: alpha);
             }
             if (!keepDims)
@@ -499,7 +499,7 @@ namespace Proxem.NumNet.Int32
         {
             Slice[] slices = new Slice[a.Shape.Length];
             for (int i = 0; i < slices.Length; ++i)
-                slices[i] = Slicer.Range(0, a.Shape[i]);
+                slices[i] = (0, a.Shape[i]);
             return slices;
         }
     }

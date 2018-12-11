@@ -34,20 +34,24 @@ namespace Proxem.LinearAlgebra.Test
         {
 #if !NO_MKL
             var path = ConfigurationManager.AppSettings["mkl:Path"];
-            var threads = int.Parse(ConfigurationManager.AppSettings["mkl:Threads"]);
-            var initialized = false;
-            var failed = 0;
-            var maxFailures = 5;
-            while (!initialized && failed < maxFailures)
+            if (path == null) Blas.Provider = new DefaultBlas();
+            else
             {
-                try
+                var threads = int.Parse(ConfigurationManager.AppSettings["mkl:Threads"]);
+                var initialized = false;
+                var failed = 0;
+                var maxFailures = 5;
+                while (!initialized && failed < maxFailures)
                 {
-                    StartProvider.LaunchMklRt(threads, path);
-                    initialized = true;
-                }
-                catch (NotSupportedException)
-                {
-                    ++failed;
+                    try
+                    {
+                        StartProvider.LaunchMklRt(threads, path);
+                        initialized = true;
+                    }
+                    catch (NotSupportedException)
+                    {
+                        ++failed;
+                    }
                 }
             }
 #endif

@@ -25,6 +25,7 @@ namespace Proxem.NumNet
 {
     using System.Runtime.CompilerServices;
     using static StridedExtension;
+    using static Slicer;
 
     public class Strided<Type>
     {
@@ -140,7 +141,7 @@ namespace Proxem.NumNet
 
     public static class StridedExtension
     {
-        public static Slice[] Slices<T>(this Strided<T> a) => a.Shape.Select(d => Slicer.Range(0, d)).ToArray();
+        public static Slice[] Slices<T>(this Strided<T> a) => a.Shape.Select(d => Range(0, d)).ToArray();
 
         public static int ComputeSize(int[] shape)
         {

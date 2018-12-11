@@ -18,13 +18,11 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Proxem.NumNet
 {
+    using static Slicer;
+
     public class PCA
     {
         public int nComponents;
@@ -61,7 +59,7 @@ namespace Proxem.NumNet
         private void SVDFlip(Array<float> u, int k)
         {
             // Following svd_flip with u_based_decision from sklearn to flip columns of u :
-            u = u[Slicer._, Slicer.Range(0, Math.Min(nComponents, k))];
+            u = u[_, (0, Math.Min(nComponents, k))];
             var maxAbsCol = NN.Argmax(NN.Abs(u), axis: 0);
             var signs = new Array<float>(1, u.Shape[1]);
             for (int i = 0; i < u.Shape[1]; i++)
@@ -69,14 +67,14 @@ namespace Proxem.NumNet
                 signs.Values[i] = (float)(NN.Sign(u[maxAbsCol.Values[i], i]));
             }
             u *= signs;
-            components_ = components_[Slicer.Range(0, Math.Min(nComponents, k)), Slicer._];
+            components_ = components_[(0, Math.Min(nComponents, k)), _];
             components_ *= signs.Reshape(u.Shape[1], 1);
         }
 
         public Array<float> FirstComponent(Array<float> X, bool center = true)
         {
             X = Fit(X, center);
-            var fpc = components_[0, Slicer._];
+            var fpc = components_[0, _];
             var mpc = NN.Dot(fpc.Reshape(fpc.Shape[0], 1), fpc.Reshape(1, fpc.Shape[0]));
             return mpc;
         }

@@ -165,7 +165,7 @@ namespace Proxem.NumNet.Single
             int ndim = a.Shape[axis];
             for (int d = 0; d < ndim; ++d)
             {
-                slice[axis] = Slicer.Range(d, d+1);
+                slice[axis] = (d, d+1);
                 Array_.ElementwiseOp(a[slice], result, (n, _a, off_a, step_a, _r, off_r, step_r) => {
                     Real s = 0;
                     for (int i = 0; i < n; i++)

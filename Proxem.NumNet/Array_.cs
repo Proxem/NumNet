@@ -24,6 +24,7 @@ using System.Diagnostics;
 namespace Proxem.NumNet
 {
     using static ShapeUtil;
+    using static Slicer;
 
     public static class Array_
     {
@@ -32,7 +33,7 @@ namespace Proxem.NumNet
             Array<T2> b, int offsetb,
             Action<int, T1[], int, int, T2[], int, int> op)
         {
-            var slice = axisA < slices.Length ? slices[axisA] : Slicer._;
+            var slice = axisA < slices.Length ? slices[axisA] : _;
             var lower = a.GetAbsoluteIndex(slice.Start, axisA);
             var upper = slice.IsSingleton() ? lower + 1 : a.GetAbsoluteIndex(slice.Stop, axisA);
             if (axisA == lastAxis)
@@ -69,7 +70,7 @@ namespace Proxem.NumNet
             Array<T2> b, int offsetb,
             Action<int, T1[], int, int, T2[], int, int> op)
         {
-            var slice = axisA < singletons.Length ? singletons[axisA] : Slicer._;
+            var slice = axisA < singletons.Length ? singletons[axisA] : _;
             var lower = a.GetAbsoluteIndex(slice.Start, axisA);
             var upper = slice.IsSingleton() ? lower + 1 : a.GetAbsoluteIndex(slice.Stop, axisA);
             if (axisA == lastAxis)
@@ -490,7 +491,7 @@ namespace Proxem.NumNet
         {
             if (axis < 0) axis += array.NDim;
             var slices = array.Slices();
-            slices[axis] = keepDims ? Slicer.Range(0, 1) : 0;
+            slices[axis] = keepDims ? (0, 1) : Only(0);
 
             int N = array.Shape[axis];
             int stride = array.Stride[axis];
@@ -510,7 +511,7 @@ namespace Proxem.NumNet
         {
             if (axis < 0) axis += array.NDim;
             var slices = array.Slices();
-            slices[axis] = keepDims ? Slicer.Range(0, 1) : 0;
+            slices[axis] = keepDims ? (0, 1) : Only(0);
 
             int N = array.Shape[axis];
             int stride = array.Stride[axis];

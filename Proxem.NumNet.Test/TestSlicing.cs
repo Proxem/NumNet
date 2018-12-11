@@ -51,13 +51,13 @@ namespace Proxem.NumNet.Test
             AssertArray.AreEqual(new[] { 0, 1, 2, 3 }, a);
             AssertArray.AreEqual(new[] { 0, 1, 2, 3 }, a[_]);
 
-            AssertArray.AreEqual(new[] { 0, 1 }, a[Range(0, 2)]);
-            AssertArray.AreEqual(new[] { 1 },    a[Range(1, 2)]);
+            AssertArray.AreEqual(new[] { 0, 1 }, a[(0, 2)]);
+            AssertArray.AreEqual(new[] { 1 },    a[(1, 2)]);
             AssertArray.AreEqual(new[] { 0, 1 }, a[Upto(2)]);
             AssertArray.AreEqual(new[] { 2, 3 }, a[From(2)]);
 
-            AssertArray.AreEqual(new[] { 0, 1 },    a[Range(0, -2)]);
-            AssertArray.AreEqual(new[] { 1, 2 },    a[Range(1, -1)]);
+            AssertArray.AreEqual(new[] { 0, 1 },    a[(0, -2)]);
+            AssertArray.AreEqual(new[] { 1, 2 },    a[(1, -1)]);
             AssertArray.AreEqual(new[] { 0, 1, 2 }, a[Upto(-1)]);
             AssertArray.AreEqual(new[] { 1, 2, 3 }, a[From(-3)]);
 
@@ -80,8 +80,8 @@ namespace Proxem.NumNet.Test
             var a = NN.Diag<float>(0, 1, 2, 3);
             var b = NN.Array<float>(0, 2);
 
-            AssertArray.AreEqual(b, a[Range(1, 3), 2]);
-            AssertArray.AreEqual(b, a[Range(1, -1), -2]);
+            AssertArray.AreEqual(b, a[(1, 3), 2]);
+            AssertArray.AreEqual(b, a[(1, -1), -2]);
         }
 
         [TestMethod]
@@ -89,10 +89,10 @@ namespace Proxem.NumNet.Test
         {
             var a = NN.Diag<float>(0, 1, 2, 3);
 
-            a[Range(1, 3), 2] = new float[] { 0, 4 };
+            a[(1, 3), 2] = new float[] { 0, 4 };
             AssertArray.AreEqual(NN.Diag<float>(0, 1, 4, 3), a);
 
-            a[Range(1, -1), -2] = new float[] { 0, 5 };
+            a[(1, -1), -2] = new float[] { 0, 5 };
             AssertArray.AreEqual(NN.Diag<float>(0, 1, 5, 3), a);
         }
 
@@ -101,9 +101,9 @@ namespace Proxem.NumNet.Test
         {
             var a = NN.Diag<float>(1, 2, 3, 4);
             var b = NN.Diag<float>(2, 3);
-            var c = a[Range(1, 3), Range(1, 3)];
+            var c = a[(1, 3), (1, 3)];
             AssertArray.AreEqual(b, c);
-            c = a[Range(1, -1), Range(1, -1)];
+            c = a[(1, -1), (1, -1)];
             AssertArray.AreEqual(b, c);
         }
 
@@ -117,7 +117,7 @@ namespace Proxem.NumNet.Test
                 { 0, 6 }
             });
 
-            a[Range(1, 3), Range(1, 3)] = b;
+            a[(1, 3), (1, 3)] = b;
             AssertArray.AreEqual(a, NN.Diag<float>(0, 5, 6, 3));
         }
 
@@ -151,21 +151,21 @@ namespace Proxem.NumNet.Test
                 { 3, 6 }
             });
 
-            a[Range(1, 3), Range(1, 3), 1] = b;
+            a[(1, 3), (1, 3), 1] = b;
             Assert.AreEqual(5, a.Item[1, 1, 1]);
             Assert.AreEqual(2, a.Item[1, 2, 1]);
             Assert.AreEqual(3, a.Item[2, 1, 1]);
             Assert.AreEqual(6, a.Item[2, 2, 1]);
 
             a = NN.Ones<float>(3, 4, 2);
-            a[Range(1, 3), 2, _] = b;
+            a[(1, 3), 2, _] = b;
             Assert.AreEqual(5, a.Item[1, 2, 0]);
             Assert.AreEqual(2, a.Item[1, 2, 1]);
             Assert.AreEqual(3, a.Item[2, 2, 0]);
             Assert.AreEqual(6, a.Item[2, 2, 1]);
 
             a = NN.Ones<float>(3, 4, 2);
-            a[2, Range(1, 3), _] = b;
+            a[2, (1, 3), _] = b;
             Assert.AreEqual(5, a.Item[2, 1, 0]);
             Assert.AreEqual(2, a.Item[2, 1, 1]);
             Assert.AreEqual(3, a.Item[2, 2, 0]);
@@ -178,13 +178,13 @@ namespace Proxem.NumNet.Test
             var b = NN.Array<float>(3, 5, 2);
 
             var a = NN.Ones<float>(5, 4, 3);
-            a[Range(1, 4), 2, 1] = b;
+            a[(1, 4), 2, 1] = b;
             Assert.AreEqual(3, a.Item[1, 2, 1]);
             Assert.AreEqual(5, a.Item[2, 2, 1]);
             Assert.AreEqual(2, a.Item[3, 2, 1]);
 
             a = NN.Ones<float>(5, 4, 3);
-            a[3, Range(1, 4), 1] = b;
+            a[3, (1, 4), 1] = b;
             Assert.AreEqual(3, a.Item[3, 1, 1]);
             Assert.AreEqual(5, a.Item[3, 2, 1]);
             Assert.AreEqual(2, a.Item[3, 3, 1]);
@@ -208,16 +208,16 @@ namespace Proxem.NumNet.Test
             M2 = NN.Eye<float>(2).Scale(r);
 
             M = NN.Random.Uniform(-r, r, 5, 4, 3).As<float>();
-            M[Range(2, 4), Range(1, 3), 1] = M2;
-            AssertArray.AreEqual(M2, M[Range(2, 4), Range(1, 3), 1]);
+            M[(2, 4), (1, 3), 1] = M2;
+            AssertArray.AreEqual(M2, M[(2, 4), (1, 3), 1]);
 
             M = NN.Random.Uniform(-r, r, 5, 4, 3).As<float>();
-            M[1, Range(1, 3), Range(1, 3)] = M2;
-            AssertArray.AreEqual(M2, M[1, Range(1, 3), Range(1, 3)]);
+            M[1, (1, 3), (1, 3)] = M2;
+            AssertArray.AreEqual(M2, M[1, (1, 3), (1, 3)]);
 
             M = NN.Random.Uniform(-r, r, 5, 4, 3).As<float>();
-            M[Range(2, 4), -1, Range(1, 3)] = M2;
-            AssertArray.AreEqual(M2, M[Range(2, 4), -1, Range(1, 3)]);
+            M[(2, 4), -1, (1, 3)] = M2;
+            AssertArray.AreEqual(M2, M[(2, 4), -1, (1, 3)]);
         }
 
         [TestMethod]
@@ -232,16 +232,16 @@ namespace Proxem.NumNet.Test
             M2 = NN.Eye<float>(2).Scale(r);
 
             M = NN.Random.Uniform(-r, r, 5, 4, 3).As<float>();
-            M[Range(2, 4), Range(1, 3), 1] = M2.Reshape(2, 2, 1);
-            AssertArray.AreEqual(M2, M[Range(2, 4), Range(1, 3), 1]);
+            M[(2, 4), (1, 3), 1] = M2.Reshape(2, 2, 1);
+            AssertArray.AreEqual(M2, M[(2, 4), (1, 3), 1]);
 
             M = NN.Random.Uniform(-r, r, 5, 4, 3).As<float>();
-            M[1, Range(1, 3), Range(1, 3)] = M2.Reshape(1, 2, 2);
-            AssertArray.AreEqual(M2, M[1, Range(1, 3), Range(1, 3)]);
+            M[1, (1, 3), (1, 3)] = M2.Reshape(1, 2, 2);
+            AssertArray.AreEqual(M2, M[1, (1, 3), (1, 3)]);
 
             M = NN.Random.Uniform(-r, r, 5, 4, 3).As<float>();
-            M[Range(2, 4), -1, Range(1, 3)] = M2.Reshape(2, 1, 2);
-            AssertArray.AreEqual(M2, M[Range(2, 4), -1, Range(1, 3)]);
+            M[(2, 4), -1, (1, 3)] = M2.Reshape(2, 1, 2);
+            AssertArray.AreEqual(M2, M[(2, 4), -1, (1, 3)]);
         }
 
         [TestMethod]
@@ -255,7 +255,7 @@ namespace Proxem.NumNet.Test
                 { 2, -3, 4, 5 }
             });
 
-            var m2 = m[From(1), Range(1, 3)];
+            var m2 = m[From(1), (1, 3)];
 
             var m2Expected = NN.Array<float>(new float[,] {
                 { -2, 3 },
@@ -278,7 +278,7 @@ namespace Proxem.NumNet.Test
         {
             //var a = new Tensor(4, 3);
             var m = NN.Ones<float>(5, 5);
-            var a = m[Range(1, 4), Range(1, 5)].T;
+            var a = m[(1, 4), (1, 5)].T;
             var a2 = NN.Zeros<float>(4, 3);
             var b = new Array<float>(3, 5);
 
@@ -322,25 +322,25 @@ namespace Proxem.NumNet.Test
         {
             var x = NN.Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-            AssertArray.AreEqual(NN.Array( 1, 3, 5 ), x[Range(1, 7, 2)]);
-            AssertArray.AreEqual(NN.Array( 8, 9 ), x[Range(-2, 10)]);
-            AssertArray.AreEqual(NN.Array( 7, 6, 5, 4 ), x[Range(-3, 3, -1)]);
+            AssertArray.AreEqual(NN.Array( 1, 3, 5 ), x[(1, 7, 2)]);
+            AssertArray.AreEqual(NN.Array( 8, 9 ), x[(-2, 10)]);
+            AssertArray.AreEqual(NN.Array( 7, 6, 5, 4 ), x[(-3, 3, -1)]);
             AssertArray.AreEqual(NN.Array( 5, 6, 7, 8, 9 ), x[From(5)]);
             AssertArray.AreEqual(NN.Array( 5, 7, 9 ), x[From(5, step: 2)]);
             AssertArray.AreEqual(NN.Array( 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ), x[Step(-1)]);
 
             var y = NN.Array(new [,] { { 0, 10 }, { 1, 11 } });
-            AssertArray.AreEqual(NN.Array( 1, 11 ), y[Range(-1, 0, -1)], allowBroadcasting: true);
-            AssertArray.AreEqual(NN.Array( 0, 10 ), y[Range(-2, null, -1)], allowBroadcasting: true);
+            AssertArray.AreEqual(NN.Array( 1, 11 ), y[(-1, 0, -1)], allowBroadcasting: true);
+            AssertArray.AreEqual(NN.Array( 0, 10 ), y[(-2, null, -1)], allowBroadcasting: true);
 
-            AssertArray.AreEqual(NN.Empty<int>(), y[Range(-2, 0, -1)], allowBroadcasting: true);
+            AssertArray.AreEqual(NN.Empty<int>(), y[(-2, 0, -1)], allowBroadcasting: true);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentException)), TestCategory("Exception")]
         public void FailStep()
         {
             var y = NN.Array(new float[,] { { 0, 10 }, { 1, 11 } });
-            AssertArray.AreAlmostEqual(NN.Empty<float>(), y[Range(-3, null, -1)]);
+            AssertArray.AreAlmostEqual(NN.Empty<float>(), y[(-3, null, -1)]);
         }
 
         [TestMethod]

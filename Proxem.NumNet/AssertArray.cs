@@ -326,9 +326,9 @@ namespace Proxem.NumNet
                                     for (int i = 0; i < shape.Length; ++i) slice[i] = rnd.Next(shape[i]);
 
                                     if (step > 0)
-                                        slice[axisOff] = Slicer.Range(offset, offset + n * step, step);
+                                        slice[axisOff] = (offset, offset + n * step, step);
                                     else
-                                        slice[axisOff] = Slicer.Range(offset - n * step - 1, offset != 0 ? offset - 1 : int.MinValue, step);
+                                        slice[axisOff] = (offset - n * step - 1, offset != 0 ? offset - 1 : int.MinValue, step);
 
                                     // set the view with the correct values
                                     t[slice] = vec;
@@ -375,13 +375,13 @@ namespace Proxem.NumNet
                                     for (int i = 0; i < shape.Length; ++i) slice[i] = rnd.Next(shape[i]);
 
                                     if (step1 > 0)
-                                        slice[ax1] = Slicer.Range(off1, off1 + rows * step1, step1);
+                                        slice[ax1] = (off1, off1 + rows * step1, step1);
                                     else
-                                        slice[ax1] = Slicer.Range(off1 - rows * step1 - 1, off1 != 0 ? off1 - 1 : int.MinValue, step1);
+                                        slice[ax1] = (off1 - rows * step1 - 1, off1 != 0 ? off1 - 1 : int.MinValue, step1);
                                     if (step2 > 0)
-                                        slice[ax2] = Slicer.Range(off2, off2 + rows * step2, step2);
+                                        slice[ax2] = (off2, off2 + rows * step2, step2);
                                     else
-                                        slice[ax2] = Slicer.Range(off2 - rows * step2 - 1, off2 != 0 ? off2 - 1 : int.MinValue, step2);
+                                        slice[ax2] = (off2 - rows * step2 - 1, off2 != 0 ? off2 - 1 : int.MinValue, step2);
 
                                     // set the view with the correct values
                                     var m = ax1 > ax2 ? t[slice] : t[slice].T;
