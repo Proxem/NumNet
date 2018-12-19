@@ -134,7 +134,11 @@ If no "mkl:path" is found, a default managed BLAS provider is used. Note that th
 We provide a Nuget Package of **NumNet** to facilitate its use. It's available on [Nuget.org](https://www.nuget.org/packages/Proxem.NumNet/). 
 Symbols are also available to facilitate debugging inside the package.
 
-## Contact
+## Disclaimer
+
+This is not an official Proxem product.
+
+## Contact information
 
 If you can't make **NumNet** work on your computer or if you have any tracks of improvement drop us an e-mail at one of the following address:
 - thp@proxem.com
