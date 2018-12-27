@@ -17,10 +17,16 @@ namespace Proxem.NumNet.Benchmark
         private Array<float> numnet_1;
         private Array<float> numnet_2;
 
-        private NumPy np;
+        private Array<float> numnet_flat_1;
+        private Array<float> numnet_flat_2;
+
+        //private NumPy np;
 
         private NDArray numsharp_1;
         private NDArray numsharp_2;
+
+        private NDArray numsharp_flat_1;
+        private NDArray numsharp_flat_2;
 
         [Params(100, 500)]
         public int N;
@@ -34,10 +40,14 @@ namespace Proxem.NumNet.Benchmark
 
             numnet_1 = NN.Random.Normal(0, 1, N, N);
             numnet_2 = NN.Random.Normal(0, 1, N, N);
+            numnet_flat_1 = NN.Random.Normal(0, 1, N * N);
+            numnet_flat_2 = NN.Random.Normal(0, 1, N * N);
 
-            np = new NumPy();
-            numsharp_1 = np.random.normal(0, 1, N, N);
-            numsharp_2 = np.random.normal(0, 1, N, N);
+            //np = new NumPy();
+            numsharp_1 = np.random.normal(0, 1, N, N).reshape(new Shape(N, N)); // need reshaping cause there's a bug in 'np.random.normal'
+            numsharp_2 = np.random.normal(0, 1, N, N).reshape(new Shape(N, N));
+            numsharp_flat_1 = np.random.normal(0, 1, N * N);
+            numsharp_flat_2 = np.random.normal(0, 1, N * N);
         }
 
         [BenchmarkCategory("Dot"), Benchmark]
@@ -45,6 +55,12 @@ namespace Proxem.NumNet.Benchmark
 
         [BenchmarkCategory("Dot"), Benchmark]
         public NDArray NumSharpDot() => np.dot(numsharp_1, numsharp_2);
+
+        [BenchmarkCategory("Dot"), Benchmark]
+        public Array<float> NumNetDotFlat() => NN.Dot(numnet_flat_1, numnet_flat_2);
+
+        [BenchmarkCategory("Dot"), Benchmark]
+        public NDArray NumSharpDotFlat() => np.dot(numsharp_flat_1, numsharp_flat_2);
 
         [BenchmarkCategory("Maths"), Benchmark]
         public Array<float> NumNetLog() => NN.Log(numnet_1);
