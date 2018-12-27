@@ -26,7 +26,7 @@ namespace Proxem.NumNet.Benchmark
             // Launching mkl for NumNet (path might need to be change)
             var path = "C:/data/dlls/mkl";
             StartProvider.LaunchMklRt(1, path);
-            var np = new NumPy();
+            //var np = new NumPy(); deprecated
 
             _numnet_3d = NN.Random.Normal(0f, 1f, 10, 8, 12);
             _numsharp_3d = np.random.normal(0f, 1f, 10, 8, 12);

@@ -8,7 +8,6 @@ namespace Proxem.NumNet.Benchmark
         static void Main(string[] args)
         {
             var summary = BenchmarkRunner.Run<BaseFunctionsBenchmarkMkl>();
-
             Console.ReadLine();
         }
     }

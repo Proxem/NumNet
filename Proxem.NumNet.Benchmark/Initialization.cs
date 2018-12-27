@@ -14,7 +14,7 @@ namespace Proxem.NumNet.Benchmark
     [CsvExporter]
     public class InitBenchmark
     {
-        private NumPy np;
+        //private NumPy np;
 
         [GlobalSetup]
         public void Setup()
@@ -23,8 +23,8 @@ namespace Proxem.NumNet.Benchmark
             var path = "C:/data/dlls/mkl";
             StartProvider.LaunchMklRt(1, path);
 
-            // Creating NumPy for NumSharp
-            np = new NumPy();
+            // Creating NumPy for NumSharp (deprecated)
+            //np = new NumPy();
         }
 
         [BenchmarkCategory("Gaussian"), Benchmark(Baseline = true)]
