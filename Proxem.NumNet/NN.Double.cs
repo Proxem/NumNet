@@ -347,9 +347,9 @@ namespace Proxem.NumNet
 
         /// <summary>
         /// TensorDot, see http://deeplearning.net/software/theano/library/tensor/basic.html
-        /// Given two tensors a and b,tensordot computes a generalized dot product over the provided axes. Theanoâ€™s implementation reduces all
+        /// Given two tensors a and b,tensordot computes a generalized dot product over the provided axes. Theano’s implementation reduces all
         /// expressions to matrix or vector dot products and is based on code from
-        /// <a href="http://www.cs.toronto.edu/~tijmen/gnumpy.html">Tijmen Tielemanâ€™s gnumpy</a>.
+        /// <a href="http://www.cs.toronto.edu/~tijmen/gnumpy.html">Tijmen Tieleman’s gnumpy</a>.
         /// </summary>
         /// <remarks>
         /// The tensor dot can cause long copy of array if the axes of 'a' aren't the lasts, and axes of 'b' aren't the firsts.
@@ -594,7 +594,7 @@ namespace Proxem.NumNet
             // ----------
             // m : array_like
             //     A 1-D or 2-D array containing multiple variables and observations.
-            //     Each row of `m` represents a variable, and each column a Double
+            //     Each row of `m` represents a variable, and each column a single
             //     observation of all those variables. Also see `rowvar` below.
             // ddof : int, optional
             //     .. versionadded:: 1.5

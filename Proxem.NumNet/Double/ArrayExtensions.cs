@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Linq;
 using System.IO;
 
 using Proxem.BlasNet;
@@ -181,7 +182,7 @@ namespace Proxem.NumNet.Double
             return result;
         }
 
-        /// <summary> a.Sum(axis = 1)[i] = Î± * Î£_j a[i, j] </summary>
+        /// <summary> a.Sum(axis = 1)[i] = α * Σ_j a[i, j] </summary>
         public static Array<Real> Sum(this Array<Real> a, int axis, Array<Real> result = null, Real alpha = 1, Real beta = 0, bool keepDims = false)
         {
             if (axis < 0) axis = a.Shape.Length + axis;
@@ -378,7 +379,7 @@ namespace Proxem.NumNet.Double
             return a.Scale(1 / NN.Norm(a), result: result);
         }
 
-        /// <summary>a += Î± * b </summary>
+        /// <summary>a += α * b </summary>
         public static void Acc(this Array<Real> a, Array<Real> b, Real alpha = 1)
         {
             if (alpha == 0) return;
