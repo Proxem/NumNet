@@ -6,9 +6,10 @@ foreach (var type in new [] { "Single", "Double" }) {
   manager.StartNewFile($"{type}/ArrayExtensions.cs");
 #>
 using System;
+using System.Linq;
 using System.IO;
 
-using Proxem.NumNet.Basic;
+using Proxem.BlasNet;
 using Real = System.<#=type#>;
 
 namespace Proxem.NumNet.<#=type#>
@@ -852,7 +853,7 @@ namespace Proxem.NumNet.<#=type#>
             for (int j = y.Offset; j < J; j += strideJ)
             {
                 // result += alpha * y[j] * (t[:, j, :] . x)
-                Blas.gemv(Order.RowMajor, Basic.Transpose.NoTrans,
+                Blas.gemv(Order.RowMajor, Transpose.NoTrans,
                     t.Shape[0], t.Shape[2],
                     alpha * y.Values[j],
                     t.Values, offsetT, t.Stride[0],

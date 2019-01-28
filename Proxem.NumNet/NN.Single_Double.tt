@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Proxem.NumNet.Basic;
+using Proxem.BlasNet;
 using Proxem.NumNet.<#=type#>;
 
 using Real = System.<#=type#>;

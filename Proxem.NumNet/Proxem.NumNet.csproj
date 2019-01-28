@@ -65,14 +65,34 @@
     <ItemGroup>
       <None Update="ArrayExtensions.tt">
         <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>ArrayExtensions.cs</LastGenOutput>
       </None>
       <None Update="NN.Single_Double.tt">
         <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>NN.Single_Double.cs</LastGenOutput>
       </None>
+    </ItemGroup>
+    <ItemGroup>
+      <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Update="ArrayExtensions.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ArrayExtensions.tt</DependentUpon>
+      </Compile>
+      <Compile Update="NN.Single_Double.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>NN.Single_Double.tt</DependentUpon>
+      </Compile>
     </ItemGroup>
     
     <ItemGroup>
       <Compile Remove="obsolete/**" />
+    </ItemGroup>
+  
+    <ItemGroup>
       <None Remove="*.tt" />
     </ItemGroup>
 
