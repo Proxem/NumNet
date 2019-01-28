@@ -1019,6 +1019,97 @@ namespace Proxem.NumNet
             }
         });
 
+        public Array<Type> Shuffle(int[] perms = null, Array<Type> result = null, int axis = 0)
+        {
+            if (perms == null)
+            {
+                perms = Enumerable.Range(0, this.Shape[axis]).ToArray();
+                NN.Random.Shuffle(perms);
+            }
+            if (result == null)
+            {
+                result = new Array<Type>(this.Shape);
+            }
+
+            var slice1 = this.Slices();
+            var slice2 = this.Slices();
+            int ndim = this.Shape[axis];
+            for (int d = 0; d < ndim; ++d)
+            {
+                slice1[axis] = Slicer.Range(d, d + 1);
+                slice2[axis] = Slicer.Range(perms[d], perms[d] + 1);
+                Array_.ElementwiseOp(this[slice1], result[slice2], (n, _a, off_a, step_a, _r, off_r, step_r) => {
+                    for (int i = 0; i < n; i++)
+                    {
+                        _r[off_r] = _a[off_a];
+                        off_a += step_a;
+                        off_r += step_r;
+                    }
+                });
+            }
+            return result;
+        }
+
+        public void ShuffleInplace(int[] perms = null, int axis = 0)
+        {
+            if (perms == null)
+            {
+                perms = Enumerable.Range(0, this.Shape[axis]).ToArray();
+                NN.Random.Shuffle(perms);
+            }
+            var flags = new bool[this.Shape[axis]];
+            var slice1 = this.Slices();
+            var slice2 = this.Slices();
+            int ndim = this.Shape[axis];
+
+            var sliceShape = new int[this.Shape.Length];
+            Array.Copy(Shape, sliceShape, sliceShape.Length);
+            sliceShape[axis] = 1;
+
+            var storage1 = new Array<Type>(sliceShape);
+            var storage2 = new Array<Type>(sliceShape);
+            bool n1 = true;
+            bool any = false;
+
+            int d = 0;
+            for (int _ = 0; _ < ndim; ++_)
+            {
+                if (flags[d]) // line was already permuted
+                {
+                    d = 0;
+                    while (flags[d]) d++;
+                }
+                var idx = perms[d];
+                if (idx == d)
+                {
+                    flags[d] = true;
+                    continue;
+                }
+                slice1[axis] = Slicer.Range(d, d + 1);
+                slice2[axis] = Slicer.Range(idx, idx + 1);
+                Array_.ElementwiseOp(this[slice2], n1 ? storage1 : storage2, (n, _a, off_a, step_a, _r, off_r, step_r) => {
+                    for (int i = 0; i < n; i++)
+                    {
+                        _r[off_r] = _a[off_a];
+                        off_a += step_a;
+                        off_r += step_r;
+                    }
+                });
+                Array_.ElementwiseOp(n1 ? (any ? storage2 : this[slice1]) : storage1, this[slice2], (n, _a, off_a, step_a, _r, off_r, step_r) => {
+                    for (int i = 0; i < n; i++)
+                    {
+                        _r[off_r] = _a[off_a];
+                        off_a += step_a;
+                        off_r += step_r;
+                    }
+                });
+                if (!any) any = true;
+                n1 = !n1;
+                flags[d] = true;
+                d = idx;
+            }
+        }
+
         public Array<Type> Insert(Array<Type> other, int index, int axis, Array<Type> result = null)
         {
             if (other.Shape.Length != this.Shape.Length - 1) throw new RankException();

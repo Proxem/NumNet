@@ -92,6 +92,7 @@
     <Compile Include="TestFlags.cs" />
     <Compile Include="TestLapack.cs" />
     <Compile Include="TestReshape.cs" />
+    <Compile Include="TestShuffle.cs" />
     <Compile Include="TestSoftmax.cs" />
     <Compile Include="TestSparseMatrix.cs" />
     <Compile Include="UnitTestInitialize.cs" />
