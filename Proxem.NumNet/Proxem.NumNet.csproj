@@ -2,22 +2,6 @@
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <Configurations>Debug;Release</Configurations>
-        <Title>Proxem.NumNet</Title>
-        <Version>1.1.0</Version>
-        <Copyright></Copyright>
-        <Description>
-        C# scientific package containing among other things :
-            * an N-dimensionnal array object and the main functions to operate on it
-            * the main linear algebra functions on n-dimensionnal arrays. 
-        The synthax is mainly based on python's numpy library. MKL is used for optimized performances.
-        </Description>
-        <Authors>Jocelyn Coulmance, Guillaume Wenzek, Thomas Perrais, Jean-Marc Marty</Authors>
-        <Company>Proxem</Company>
-        <RepositoryUrl>https://git.dc3.proxem.net/Theanet.git</RepositoryUrl>
-        <PackageTags>arrays linear-algebra</PackageTags>
-        <PackageReleaseNotes>migrated to .netstandard 2.0</PackageReleaseNotes>
-        <AssemblyVersion>1.1.0</AssemblyVersion>
-        <FileVersion>1.1.0</FileVersion>
         <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
@@ -60,7 +44,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Proxem.BlasNet" Version="1.5.0" />
+      <PackageReference Include="Proxem.BlasNet" Version="1.6" />
     </ItemGroup>
     <ItemGroup>
       <None Update="ArrayExtensions.tt">
