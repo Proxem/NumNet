@@ -44,7 +44,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Proxem.BlasNet" Version="1.6" />
+      <PackageReference Include="Proxem.BlasNet" Version="1.6.0" />
     </ItemGroup>
     <ItemGroup>
       <None Update="ArrayExtensions.tt">

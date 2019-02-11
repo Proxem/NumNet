@@ -4,7 +4,7 @@
     <id>Proxem.NumNet</id>
     <version>1.6</version>
     <title>NumNet</title>
-    <licenseUrl>https://github.com/Proxem/NumNet/blob/master/LICENSE</licenseUrl>
+    <license type="expression">Apache-2.0</license>
     <iconUrl>https://github.com/Proxem/NumNet/blob/master/logo/proxem.png?raw=true</iconUrl>
     <projectUrl>https://github.com/Proxem/NumNet</projectUrl>
     <authors>Jocelyn Coulmance, Thomas Perrais, Guillaume Wenzek, Amine Benhalloum, Jean-Marc Marty</authors>
@@ -21,7 +21,7 @@
     <tags>arrays linear-algebra numpy machine-learning matrix</tags>
     <summary>Scientific package for Linear algebra operations on matrices</summary>
     <dependencies>
-      <dependency id="Proxem.BlasNet" version="1.6" />
+      <dependency id="Proxem.BlasNet" version="1.6.0" />
     </dependencies>
   </metadata>
   <files>
