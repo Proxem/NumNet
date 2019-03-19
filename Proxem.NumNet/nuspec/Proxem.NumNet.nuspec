@@ -16,7 +16,7 @@
             * the main linear algebra functions on N-dimensional arrays. 
         The syntax is mainly based on python's numpy library. MKL is used for optimized performances.
     </description>
-    <releaseNotes>norms & euclidean norms</releaseNotes>
+    <releaseNotes>fast norms computation</releaseNotes>
     <copyright></copyright>
     <tags>arrays linear-algebra numpy machine-learning matrix</tags>
     <summary>Scientific package for Linear algebra operations on matrices</summary>
