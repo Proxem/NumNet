@@ -252,7 +252,7 @@ namespace Proxem.NumNet
 
         public static Real Norm(Array<Real> a)
         {
-            return (Real)Math.Sqrt(NN.Norm2(a));
+            return (Real)Math.Sqrt(Norm2(a));
         }
 
         public static Real Norm2(Array<Real> a)
@@ -266,14 +266,48 @@ namespace Proxem.NumNet
             return result;
         }
 
+        public static Array<Real> Norm(Array<Real> a, int axis, Array<Real> result =null)
+        {
+            return Norm2(a, axis, result).Map(x => (Real)Math.Sqrt(x));
+        }
+
+        public static Array<Real> Norm2(Array<Real> a, int axis, Array<Real> result = null)
+        {
+            if (axis < 0) axis = a.Shape.Length + axis;
+            if (result == null)
+                result = Zeros<Real>(GetAggregatorResultShape(a, axis, true));
+            else if (result.NDim != a.NDim)
+                result = result.Reshape(GetAggregatorResultShape(a, axis, true));
+
+            Array_.ElementwiseOp(a, result, (n, x, offx, incx, y, offy, incy) =>
+            {
+                y[offy] = Blas.dot(n, x, offx, incx, x, offx, incx);
+            }, axis);
+
+            return result;
+        }
+
         /// <summary>
-        /// Implementations of Euclidian distance that doesn't create intermediary array (unlike NN.Norm(a - b)).
+        /// Implementations of Euclidean distance that doesn't create intermediary array (unlike NN.Norm(a - b)).
         /// Faster for small arrays, longer for really big arrays
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static Real EuclidianDistance(Array<Real> a, Array<Real> b)
+        public static Real EuclideanDistance(Array<Real> a, Array<Real> b)
+        {
+            return (Real)Math.Sqrt(EuclideanDistance2(a, b));
+        }
+
+
+        /// <summary>
+        /// Implementations of squared Euclidean distance that doesn't create intermediary array (unlike NN.Norm(a - b)).
+        /// Faster for small arrays, longer for really big arrays
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static Real EuclideanDistance2(Array<Real> a, Array<Real> b)
         {
             Real result = 0;
             Array_.ElementwiseOp(a, b,
@@ -287,7 +321,7 @@ namespace Proxem.NumNet
                         offy += incy;
                     }
                 });
-            return (Real)Math.Sqrt(result);
+            return result;
         }
 
         public static Real RowNorm(this Array<Real> a, int axis = 0)
