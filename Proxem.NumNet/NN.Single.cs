@@ -219,6 +219,24 @@ namespace Proxem.NumNet
             s.Scale((Real)1 / a.Shape[axis], result: s);
             return s;
         }
+		
+		/// <summary>
+        /// Computes the standard deviation of a given sample of data along the given axis.
+        /// an estimator of the mean can be given and will be used if provided,
+        /// otherwise the unbiased estimate of the mean will be used
+        /// </summary>
+        /// <param name="a"> input data </param>
+        /// <param name="axis"> axis along which standard deviation is to be estimated </param>
+        /// <param name="ddof"> degree of freedom </param>
+        /// <param name="meanEstimate"> estimate of the mean of the data. Shape should match the shape of a along 'axis'</param>
+        public static Real Std(this Array<Real> a, int axis, int ddof = 0, Array<Real> meanEstimate = null)
+        {
+            var fac = a.Shape[axis] - ddof;
+            if (fac <= 0)
+                throw new ArgumentException($"given ddof ({ddof}) is to high compare to number of datapoints ({a.Shape[axis]})");
+            var mean = meanEstimate ?? Mean(a, axis, keepdims:true);
+            return Sq(a - mean).Sum() / (a.Shape[axis] - ddof);
+        }
 
         public static Real Variance(Array<Real> a, Array<Real> mean = null)
         {

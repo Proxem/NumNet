@@ -95,6 +95,7 @@
     <Compile Include="TestShuffle.cs" />
     <Compile Include="TestSoftmax.cs" />
     <Compile Include="TestSparseMatrix.cs" />
+    <Compile Include="TestVariance.cs" />
     <Compile Include="UnitTestInitialize.cs" />
     <Compile Include="UnitTestIterable.cs" />
     <Compile Include="UnitTestTensorCombine.cs" />
