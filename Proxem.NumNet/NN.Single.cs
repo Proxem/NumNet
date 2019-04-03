@@ -237,6 +237,23 @@ namespace Proxem.NumNet
             var mean = meanEstimate ?? Mean(a, axis, keepdims:true);
             return Sq(a - mean).Sum() / (a.Shape[axis] - ddof);
         }
+		
+		/// <summary>
+        /// Returns a standardize version of the given datapoints with mean 0 and variance 1 along the given axis.
+        /// </summary>
+        /// <param name="a"> input data </param>
+        /// <param name="axis"> axis along which mean and variance are estimated </param>
+        /// <param name="ddof"> degree of freedom (0 for biased estimator of variance / MLE; 1 for unbiased estimator)</param>
+        /// <param name="meanEstimate"> estimator of the mean along the given axis </param>
+        /// <param name="result"> resulting array will be stored in result </param>
+        /// <returns></returns>
+        public static Array<Real> Standardize(this Array<Real> a, int axis, int ddof = 0, Array<Real> meanEstimate = null, Array<Real> result = null)
+        {
+            var mean = meanEstimate ?? Mean(a, axis, keepdims: true);
+            var std = a.Std(axis, ddof, mean);
+            result = (a - mean) / std;
+            return result;
+        }
 
         public static Real Variance(Array<Real> a, Array<Real> mean = null)
         {
