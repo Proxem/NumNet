@@ -64,7 +64,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Proxem.BlasNet, Version=1.1.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\Proxem.BlasNet.1.5.0\lib\netstandard2.0\Proxem.BlasNet.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BlasNet\build\debug\netstandard2.0\Proxem.BlasNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
