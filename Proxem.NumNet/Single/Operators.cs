@@ -17,13 +17,7 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Real = System.Single;
 
 namespace Proxem.NumNet.Single
@@ -36,7 +30,7 @@ namespace Proxem.NumNet.Single
 
         public override sealed Real Add(Real a, Real b) => a + b;
         public override sealed Array<Real> Add(Array<Real> a, Array<Real> b) => a.Add(b);
-        // todo: optimize Array + Real with 'vadd' ?
+        public sealed override Array<Real> Add(Array<Real> a, Real b) => a.Add(b);
 
         public override sealed Real Mul(Real a, Real b) => a * b;
         public override sealed Array<Real> Mul(Real alpha, Array<Real> a) => a.Scale(alpha);
@@ -45,11 +39,13 @@ namespace Proxem.NumNet.Single
 
         public override sealed Real Sub(Real a, Real b) => a - b;
         public override sealed Array<Real> Sub(Array<Real> a, Array<Real> b) => a.Add(b, alpha: -1);
+        public sealed override Array<Real> Sub(Array<Real> a, Real b) => a.Sub(b);
 
         public override sealed Real Div(Real a, Real b) => a / b;
         public override sealed Array<Real> Div(Array<Real> a, Array<Real> b) => a.Div(b);
         public override sealed Array<Real> Div(Array<Real> a, Real b) => a * (1 / b);
 
+		
         public override Real Neg(Real a) => -a;
 
         public override Real Gt(Real a, Real b) => a > b ? 1 : 0;

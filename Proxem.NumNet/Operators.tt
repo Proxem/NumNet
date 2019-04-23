@@ -1,3 +1,10 @@
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@include file="..\MultipleOutputHelper.ttinclude" #>
+<#
+var manager = Manager.Create(Host, GenerationEnvironment);
+foreach (var type in new [] { "Single", "Double" }) {
+  manager.StartNewFile($"{type}/Operators.cs");
+#>
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,9 +25,9 @@
  */
 
 using System.Globalization;
-using Real = System.Double;
+using Real = System.<#=type#>;
 
-namespace Proxem.NumNet.Double
+namespace Proxem.NumNet.<#=type#>
 {
     public class Operators : Operators<Real>
     {
@@ -53,3 +60,8 @@ namespace Proxem.NumNet.Double
         public override Real GtEq(Real a, Real b) => a >= b ? 1 : 0;
     }
 }
+<#
+  manager.EndBlock();
+}
+manager.Process(true);
+#>
