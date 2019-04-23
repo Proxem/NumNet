@@ -49,6 +49,75 @@ namespace Proxem.NumNet.<#=type#>
         }
 
         #region Elementwise operations
+		
+		public static Array<Real> Equal(this Array<Real> a, Array<Real> b, Array<Real> result = null)
+        {
+            return Array_.ElementwiseOp(a, b, result,
+                (n, x, offsetx, incx, y, offsety, incy, z, offsetz, incz) =>
+                {
+                    for (int i = 0; i < n; i++)
+                    {
+                        z[offsetz] = x[offsetx] == y[offsety] ? 1 : 0;
+                        offsetx += incx;
+                        offsety += incy;
+                        offsetz += incz;
+                    }
+                });
+        }
+
+        public static Array<Real> Equal(this Array<Real> a, Real b, Array<Real> result = null)
+        {
+            if (result == null)
+            {
+                result = new Array<Real>(a.Shape);
+            }
+            Array_.ElementwiseOp(a, result,
+                (n, x, offsetx, incx, z, offsetz, incz) =>
+                {
+                    for (int i = 0; i < n; i++)
+                    {
+                        z[offsetz] = x[offsetx] == b ? 1 : 0;
+                        offsetx += incx;
+                        offsetz += incz;
+                    }
+                });
+            return result;
+        }
+
+        public static Array<Real> NotEqual(this Array<Real> a, Array<Real> b, Array<Real> result = null)
+        {
+            return Array_.ElementwiseOp(a, b, result,
+                (n, x, offsetx, incx, y, offsety, incy, z, offsetz, incz) =>
+                {
+                    for (int i = 0; i < n; i++)
+                    {
+                        z[offsetz] = x[offsetx] != y[offsety] ? 1 : 0;
+                        offsetx += incx;
+                        offsety += incy;
+                        offsetz += incz;
+                    }
+                });
+        }
+
+        public static Array<Real> NotEqual(this Array<Real> a, Real b, Array<Real> result = null)
+        {
+            if (result == null)
+            {
+                result = new Array<Real>(a.Shape);
+            }
+            Array_.ElementwiseOp(a, result,
+                (n, x, offsetx, incx, z, offsetz, incz) =>
+                {
+                    for (int i = 0; i < n; i++)
+                    {
+                        z[offsetz] = x[offsetx] != b ? 1 : 0;
+                        offsetx += incx;
+                        offsetz += incz;
+                    }
+                });
+            return result;
+        }
+		
         // result = a + alpha * b
         public static Array<Real> Add(this Array<Real> a, Array<Real> b, Real alpha = 1, Array<Real> result = null)
         {
@@ -73,9 +142,35 @@ namespace Proxem.NumNet.<#=type#>
                 }   // See also: mkl_?omatadd => C := alpha*op(A) + beta*op(B)
             });
         }
+		
+		public static Array<Real> Add(this Array<Real> a, Real b, Real alpha = 1, Array<Real> result = null)
+        {
+            if (result == null)
+            {
+                result = new Array<Real>(a.Shape);
+            }
+            Array_.ElementwiseOp(a, result,
+                (n, x, offsetx, incx, z, offsetz, incz) =>
+                {
+                    if (z == x) Blas.axpy(n, alpha, ref b, x, offsetx, incx);
+                    else
+                    {
+                        for (int i = 0; i < n; i++)
+                        {
+                            z[offsetz] = x[offsetx] + alpha * b;
+                            offsetx += incx;
+                            offsetz += incz;
+                        }
+                    }
+                });
+            return result;
+        }
 
         // result = a - alpha * b
         public static Array<Real> Sub(this Array<Real> a, Array<Real> b, Real alpha = 1, Array<Real> result = null) => a.Add(b, -alpha, result);
+		
+        public static Array<Real> Sub(this Array<Real> a, Real b, Real alpha = 1, Array<Real> result = null) => a.Add(b, -alpha, result);
+		
 
         public static Array<Real> Div(this Array<Real> a, Array<Real> b, Array<Real> result = null)
         {
