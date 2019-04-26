@@ -2,7 +2,7 @@
 <package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>    
     <id>Proxem.NumNet</id>
-    <version>1.6.3</version>
+    <version>1.6.4</version>
     <title>NumNet</title>
     <license type="expression">Apache-2.0</license>
     <iconUrl>https://github.com/Proxem/NumNet/blob/master/logo/proxem.png?raw=true</iconUrl>
@@ -17,8 +17,8 @@
         The syntax is mainly based on python's numpy library. MKL is used for optimized performances.
     </description>
     <releaseNotes>
-		- fast inplace Add and Sub for array / scalar.
-		- array pointwise Equal / Not Equal
+		- fix bug in offset for high order tensor addition
+		The bug was present when doing addition between tensors of different shapes, starting when one at least was of dim 3.
 	</releaseNotes>
     <copyright></copyright>
     <tags>arrays linear-algebra numpy machine-learning matrix</tags>

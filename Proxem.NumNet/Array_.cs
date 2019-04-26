@@ -240,8 +240,8 @@ namespace Proxem.NumNet
                 for (int i = 0; i < dimC; i++)
                 {
                     ElementwiseOp(axis + 1, a, offseta, b, offsetb, result, offsetResult, op);
-                    if (dimA != 1) offseta += a.Stride[axis];       // if a is broadcast, don't move
-                    if (dimB != 1) offsetb += b.Stride[axis];       // if b is broadcast, don't move
+                    if (dimA != 1) offseta += a.Stride[axisA];       // if a is broadcast, don't move
+                    if (dimB != 1) offsetb += b.Stride[axisB];       // if b is broadcast, don't move
                     offsetResult += result.Stride[axis];
                 }
             }
@@ -302,9 +302,9 @@ namespace Proxem.NumNet
                 for (int i = 0; i < dimR; i++)
                 {
                     ElementwiseOp(axis + 1, a, offseta, b, offsetb, c, offsetc, result, offsetResult, op);
-                    if (dimA != 1) offseta += a.Stride[axis];       // if a is broadcast, don't move
-                    if (dimB != 1) offsetb += b.Stride[axis];       // if b is broadcast, don't move
-                    if (dimC != 1) offsetc += c.Stride[axis];       // if c is broadcast, don't move
+                    if (dimA != 1) offseta += a.Stride[axisA];       // if a is broadcast, don't move
+                    if (dimB != 1) offsetb += b.Stride[axisB];       // if b is broadcast, don't move
+                    if (dimC != 1) offsetc += c.Stride[axisC];       // if c is broadcast, don't move
                     offsetResult += result.Stride[axis];
                 }
             }
@@ -380,10 +380,10 @@ namespace Proxem.NumNet
                 for (int i = 0; i < dimR; i++)
                 {
                     ElementwiseOp(axis + 1, a, offseta, b, offsetb, c, offsetc, d, offsetd, result, offsetResult, op);
-                    if (dimA != 1) offseta += a.Stride[axis];       // if a is broadcast, don't move
-                    if (dimB != 1) offsetb += b.Stride[axis];       // if b is broadcast, don't move
-                    if (dimC != 1) offsetc += c.Stride[axis];       // if c is broadcast, don't move
-                    if (dimD != 1) offsetd += d.Stride[axis];       // if d is broadcast, don't move
+                    if (dimA != 1) offseta += a.Stride[axisA];       // if a is broadcast, don't move
+                    if (dimB != 1) offsetb += b.Stride[axisB];       // if b is broadcast, don't move
+                    if (dimC != 1) offsetc += c.Stride[axisC];       // if c is broadcast, don't move
+                    if (dimD != 1) offsetd += d.Stride[axisD];       // if d is broadcast, don't move
                     offsetResult += result.Stride[axis];
                 }
             }
