@@ -50,13 +50,13 @@ namespace Proxem.NumNet
 
         public static implicit operator Slice((int start, int stop, int step) s) => new Slice(s.start, s.stop, s.step);
 
-        public static implicit operator Slice((object start, int stop) s) => Slicer.Range(s.start, s.stop);
+        public static implicit operator Slice((int? start, int stop) s) => Slicer.Range(s.start, s.stop);
 
-        public static implicit operator Slice((object start, int stop, int step) s) => Slicer.Range(s.start, s.stop, s.step);
+        public static implicit operator Slice((int? start, int stop, int step) s) => Slicer.Range(s.start, s.stop, s.step);
 
-        public static implicit operator Slice((int start, object stop) s) => Slicer.Range(s.start, s.stop);
+        public static implicit operator Slice((int start, int? stop) s) => Slicer.Range(s.start, s.stop);
 
-        public static implicit operator Slice((int start, object stop, int step) s) => Slicer.Range(s.start, s.stop, s.step);
+        public static implicit operator Slice((int start, int? stop, int step) s) => Slicer.Range(s.start, s.stop, s.step);
 
         public bool IsSingleton()
         {
@@ -96,13 +96,13 @@ namespace Proxem.NumNet
             return new Slice(start, stop, step);
         }
 
-        public static Slice Range(int start, object stop, int step = 1)
+        public static Slice Range(int start, int? stop, int step = 1)
         {
             if (stop == null) return From(start, step);
             throw new Exception("invalid stop value");
         }
 
-        public static Slice Range(object start, int stop, int step = 1)
+        public static Slice Range(int? start, int stop, int step = 1)
         {
             if (start == null) return Upto(stop, step);
             throw new Exception("invalid start value");
