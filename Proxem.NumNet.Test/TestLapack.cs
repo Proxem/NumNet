@@ -388,7 +388,7 @@ namespace Proxem.NumNet.Test
             var bnm = NN.Array(b).Reshape(-1, nrhs)[(n, m)];
             for (int i = 0; i < residual.Length; i++)
             {
-                AssertArray.AreAlmostEqual(residual[i], NN.Norm2(bnm[i]));
+                AssertArray.AreAlmostEqual(residual[i], NN.NormSqr(bnm[i]));
             }
 
             // Details of QR factorization

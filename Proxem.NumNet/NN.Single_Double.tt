@@ -1,5 +1,5 @@
 <#@ template debug="false" hostspecific="true" language="C#" #>
-<#@include file="..\MultipleOutputHelper.ttinclude" #>
+<#@include file="MultipleOutputHelper.ttinclude" #>
 <#
 var manager = Manager.Create(Host, GenerationEnvironment);
 foreach (var type in new [] { "Single", "Double" }) {
@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Proxem.NumNet.Basic;
+using Proxem.BlasNet;
 using Proxem.NumNet.<#=type#>;
 
 using Real = System.<#=type#>;
@@ -243,7 +243,7 @@ namespace Proxem.NumNet
             return (Real)Math.Sqrt(NN.Norm2(a));
         }
 
-        public static Real Norm2(Array<Real> a)
+        public static Real NormSqr(Array<Real> a)
         {
             Real result = 0;
             Array_.ElementwiseOp(0, a, 0,
@@ -253,6 +253,9 @@ namespace Proxem.NumNet
                 });
             return result;
         }
+
+		[Obsolete("Use NormSqr")]
+        public static Real Norm2(Array<Real> a) => NormSqr(a);
 
         /// <summary>
         /// Implementations of Euclidian distance that doesn't create intermediary array (unlike NN.Norm(a - b)).

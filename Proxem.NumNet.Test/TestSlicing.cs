@@ -28,6 +28,11 @@ namespace Proxem.NumNet.Test
     [TestClass]
     public class TestSlicing
     {
+        public void TestDotNet3()
+        {
+            var range = 0..3;
+        }
+
         [TestMethod]
         public void TestGenerateVec()
         {

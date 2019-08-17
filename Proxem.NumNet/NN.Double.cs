@@ -1,22 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -255,7 +236,7 @@ namespace Proxem.NumNet
             return (Real)Math.Sqrt(NN.Norm2(a));
         }
 
-        public static Real Norm2(Array<Real> a)
+        public static Real NormSqr(Array<Real> a)
         {
             Real result = 0;
             Array_.ElementwiseOp(0, a, 0,
@@ -265,6 +246,9 @@ namespace Proxem.NumNet
                 });
             return result;
         }
+
+		[Obsolete("Use NormSqr")]
+        public static Real Norm2(Array<Real> a) => NormSqr(a);
 
         /// <summary>
         /// Implementations of Euclidian distance that doesn't create intermediary array (unlike NN.Norm(a - b)).
@@ -347,9 +331,9 @@ namespace Proxem.NumNet
 
         /// <summary>
         /// TensorDot, see http://deeplearning.net/software/theano/library/tensor/basic.html
-        /// Given two tensors a and b,tensordot computes a generalized dot product over the provided axes. Theanoâ€™s implementation reduces all
+        /// Given two tensors a and b,tensordot computes a generalized dot product over the provided axes. Theano’s implementation reduces all
         /// expressions to matrix or vector dot products and is based on code from
-        /// <a href="http://www.cs.toronto.edu/~tijmen/gnumpy.html">Tijmen Tielemanâ€™s gnumpy</a>.
+        /// <a href="http://www.cs.toronto.edu/~tijmen/gnumpy.html">Tijmen Tieleman’s gnumpy</a>.
         /// </summary>
         /// <remarks>
         /// The tensor dot can cause long copy of array if the axes of 'a' aren't the lasts, and axes of 'b' aren't the firsts.
@@ -594,7 +578,7 @@ namespace Proxem.NumNet
             // ----------
             // m : array_like
             //     A 1-D or 2-D array containing multiple variables and observations.
-            //     Each row of `m` represents a variable, and each column a Double
+            //     Each row of `m` represents a variable, and each column a single
             //     observation of all those variables. Also see `rowvar` below.
             // ddof : int, optional
             //     .. versionadded:: 1.5

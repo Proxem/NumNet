@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.1</TargetFrameworks>
         <Configurations>Debug;Release</Configurations>
         <Title>Proxem.NumNet</Title>
         <Version>1.1.0</Version>
@@ -74,6 +74,29 @@
     <ItemGroup>
       <Compile Remove="obsolete/**" />
       <None Remove="*.tt" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <None Remove="MultipleOutputHelper.ttinclude" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <None Include="NN.Single_Double.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>NN.Single_Double.cs</LastGenOutput>
+      </None>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Update="NN.Single_Double.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>NN.Single_Double.tt</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     </Project>
