@@ -437,7 +437,7 @@ namespace Proxem.NumNet
                     if (a < 0 || a >= Shape[i])
                         throw new ArgumentException($"Slice [{slice.ToString()}] isn't valid for axis {i} of dim {Shape[i]}");
                     offset += a * this.Stride[i];
-                    if (!slice.IsSingleton())    // if singleton, skip axis
+                    if (!slice.IsSingleton)    // if singleton, skip axis
                     {
                         var b = this.GetAbsoluteIndex(slice.Stop, i);
                         if (slice.Step >= 0)
@@ -539,7 +539,7 @@ namespace Proxem.NumNet
                     if (a < 0 || a >= Shape[i])
                         throw new ArgumentException($"Slice [{slice.ToString()}] isn't valid for axis {i} of dim {Shape[i]}");
                     offset += a * this.Stride[i];
-                    if (!slice.IsSingleton())    // if singleton, skip axis
+                    if (!slice.IsSingleton)    // if singleton, skip axis
                     {
                         var b = this.GetAbsoluteIndex(slice.Stop, i);
                         if (slice.Step >= 0)
@@ -638,8 +638,8 @@ namespace Proxem.NumNet
                 int count = this.Shape.Length;
                 foreach (var slice in slices)
                 {
-                    if (slice.IsNewAxis()) ++count;
-                    else if (slice.IsSingleton()) --count;       // Assert(slices[i].Step == 1);
+                    if (slice.IsNewAxis) ++count;
+                    else if (slice.IsSingleton) --count;       // Assert(slices[i].Step == 1);
                 }
                 if (count == 0)
                     return new Array<Type>(EmptyArray<int>.Value, this.Values, this.RavelIndicesStart(slices), EmptyArray<int>.Value);
@@ -653,7 +653,7 @@ namespace Proxem.NumNet
                 while (j < count || i < this.Shape.Length)
                 {
                     var slice = k < slices.Length ? slices[k] : ..;
-                    if (slice.IsNewAxis())
+                    if (slice.IsNewAxis)
                     {
                         shape[j] = 1;
                         stride[j] = 0;
@@ -664,7 +664,7 @@ namespace Proxem.NumNet
                         var a = this.GetAbsoluteIndex(slice.Start, i);
                         if (a < 0 || a >= this.Shape[i]) throw new ArgumentException();
                         offset += a * this.Stride[i];
-                        if (!slice.IsSingleton())    // if singleton, skip axis
+                        if (!slice.IsSingleton)    // if singleton, skip axis
                         {
                             var b = this.GetAbsoluteIndex(slice.Stop, i);
                             if (slice.Step >= 0)
@@ -693,7 +693,7 @@ namespace Proxem.NumNet
                 if (slices.Length > this.Shape.Length) throw new RankException("too many indices");
                 var lastAxis = this.Shape.Length - 1;
                 int offset = 0;
-                while (lastAxis != 0 && lastAxis < slices.Length && slices[lastAxis].IsSingleton())
+                while (lastAxis != 0 && lastAxis < slices.Length && slices[lastAxis].IsSingleton)
                 {
                     offset += this.GetAbsoluteIndex(slices[lastAxis].Start, lastAxis) * this.Stride[lastAxis];
                     --lastAxis;

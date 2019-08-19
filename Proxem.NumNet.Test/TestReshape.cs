@@ -22,7 +22,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Proxem.NumNet.Test
 {
-    using static Slicer;
+    using static Slice;
 
     [TestClass]
     public class TestReshape
@@ -65,8 +65,8 @@ namespace Proxem.NumNet.Test
         public void CanReshapeReversedArray()
         {
             var a = NN.Zeros<int>(6);
-            a[Step(-1)] = NN.Range(6);
-            a = a[Step(-1)];
+            a[Downward()] = NN.Range(6);
+            a = a[Downward()];
 
             var b = NN.Array(new[,] {
                 { 0, 1, 2 },

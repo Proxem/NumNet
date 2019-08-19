@@ -25,7 +25,6 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Proxem.BlasNet;
 using Proxem.NumNet.Double;
-using static Proxem.NumNet.Slicer;
 
 namespace Proxem.NumNet.Test
 {

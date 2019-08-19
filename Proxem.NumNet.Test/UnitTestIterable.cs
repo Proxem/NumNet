@@ -26,8 +26,6 @@ using Proxem.NumNet.Single;
 
 namespace Proxem.NumNet.Test
 {
-    using static Slicer;
-
     [TestClass]
     public class UnitTestIterable
     {

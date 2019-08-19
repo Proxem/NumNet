@@ -22,7 +22,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Proxem.NumNet.Test
 {
-    using static Slicer;
+    using static Slice;
 
     [TestClass]
     public class TestBroadCast

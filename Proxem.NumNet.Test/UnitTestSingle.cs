@@ -25,8 +25,6 @@ using Proxem.NumNet.Single;
 
 namespace Proxem.NumNet.Test
 {
-    using static Slicer;
-
     [TestClass]
     public class UnitTestSingle
     {
@@ -791,7 +789,7 @@ namespace Proxem.NumNet.Test
             AssertArray.AreEqual(v1, v);
 
             v = v0.Copy();
-            v[(6..2, -1)] = v[(4..Slicer.Start, -1)];
+            v[(6..2, -1)] = v[(4..Slice.MinusOne, step: -1)];
         }
 
         [TestMethod]

@@ -24,7 +24,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Proxem.NumNet.Test
 {
-    using static Slicer;
+    using static Slice;
 
     [TestClass]
     public class TestFlags
@@ -40,7 +40,7 @@ namespace Proxem.NumNet.Test
             a[2..].AssertIsContiguous();
             a[2].AssertIsContiguous();
 
-            a[Step(-1)].AssertIsContiguous();
+            a[Downward()].AssertIsContiguous();
             a[(.., 2)].AssertIsContiguous();
         }
 
@@ -66,7 +66,7 @@ namespace Proxem.NumNet.Test
             a[2.., 1].AssertIsContiguous();
             a[1..3, 2].AssertIsContiguous();
 
-            a[Step(-1)].AssertIsNotContiguous();
+            a[Downward()].AssertIsNotContiguous();
             a[(..,2)].AssertIsNotContiguous();
         }
 

@@ -21,8 +21,6 @@ using System;
 
 namespace Proxem.NumNet
 {
-    using static Slicer;
-
     public class PCA
     {
         public int nComponents;

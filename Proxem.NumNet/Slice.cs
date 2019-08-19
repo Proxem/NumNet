@@ -36,6 +36,15 @@ namespace Proxem.NumNet
         public Range Range;
         public int Step;
 
+        public const int MinusOne = int.MaxValue;
+        public static readonly Slice NewAxis = (0..0, NewAxisStep);
+
+        private const int NewAxisStep = int.MaxValue;
+
+        public static Slice Downward(int step = -1)
+        {
+            return (^1..MinusOne, step);
+        }
         public Slice(Range range, int step = 1)
         {
             this.Range = range;
@@ -53,27 +62,13 @@ namespace Proxem.NumNet
 
         public static implicit operator Slice((Range range, int step) s) => new Slice(s.range, s.step);
 
-        //public static implicit operator Slice((int? start, int stop) s) => Slicer.Range(s.start, s.stop);
+        public bool IsSingleton => this.Step == 0;
 
-        //public static implicit operator Slice((int? start, int stop, int step) s) => Slicer.Range(s.start, s.stop, s.step);
-
-        //public static implicit operator Slice((int start, int? stop) s) => Slicer.Range(s.start, s.stop);
-
-        //public static implicit operator Slice((int start, int? stop, int step) s) => Slicer.Range(s.start, s.stop, s.step);
-
-        public bool IsSingleton()
-        {
-            return this.Step == 0;
-        }
-
-        public bool IsNewAxis()
-        {
-            return this.Step == Slicer.NewAxisStep;
-        }
+        public bool IsNewAxis => this.Step == NewAxisStep;
 
         public override string ToString()
         {
-            if (this.IsSingleton()) return this.Range.Start.ToString();
+            if (this.IsSingleton) return this.Range.Start.ToString();
 
             var result = new StringBuilder();
             result.Append(this.Range);
@@ -85,23 +80,5 @@ namespace Proxem.NumNet
             return result.ToString();
         }
 #endif
-    }
-
-    public static class Slicer
-    {
-        public const int Start = int.MaxValue;
-        public const int NewAxisStep = int.MaxValue;
-        public static readonly Slice NewAxis = (0..0, NewAxisStep);
-
-        public static Slice Only(int i)
-        {
-            return (i..i, 0);
-        }
-
-        public static Slice Step(int step)
-        {
-            if (step < 0) return (^1..Start, step);
-            return (.., step);
-        }
     }
 }

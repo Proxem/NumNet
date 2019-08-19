@@ -328,7 +328,7 @@ namespace Proxem.NumNet
                                     if (step > 0)
                                         slice[axisOff] = (offset..(offset + n * step), step);
                                     else
-                                        slice[axisOff] = ((offset - n * step - 1)..(offset != 0 ? offset - 1 : Slicer.Start), step);
+                                        slice[axisOff] = ((offset - n * step - 1)..(offset != 0 ? offset - 1 : Slice.MinusOne), step);
 
                                     // set the view with the correct values
                                     t[slice] = vec;
@@ -377,11 +377,11 @@ namespace Proxem.NumNet
                                     if (step1 > 0)
                                         slice[ax1] = (off1..(off1 + rows * step1), step1);
                                     else
-                                        slice[ax1] = ((off1 - rows * step1 - 1)..(off1 != 0 ? off1 - 1 : ^Slicer.Start), step1);
+                                        slice[ax1] = ((off1 - rows * step1 - 1)..(off1 != 0 ? off1 - 1 : ^Slice.MinusOne), step1);
                                     if (step2 > 0)
                                         slice[ax2] = (off2..(off2 + rows * step2), step2);
                                     else
-                                        slice[ax2] = ((off2 - rows * step2 - 1)..(off2 != 0 ? off2 - 1 : ^Slicer.Start), step2);
+                                        slice[ax2] = ((off2 - rows * step2 - 1)..(off2 != 0 ? off2 - 1 : ^Slice.MinusOne), step2);
 
                                     // set the view with the correct values
                                     var m = ax1 > ax2 ? t[slice] : t[slice].T;

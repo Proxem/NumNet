@@ -25,7 +25,6 @@ namespace Proxem.NumNet
 {
     using System.Runtime.CompilerServices;
     using static StridedExtension;
-    using static Slicer;
 
     public class Strided<Type>
     {
@@ -66,7 +65,7 @@ namespace Proxem.NumNet
             //return GetAbsoluteIndex(index.IsFromEnd ? -index.Value : index.Value, axis);
             if (index.IsFromEnd)
                 return this.Shape[axis] - index.Value;
-            else if (index.Value == Slicer.Start)
+            else if (index.Value == Slice.MinusOne)
                 return -1;
             else
                 return index.Value;

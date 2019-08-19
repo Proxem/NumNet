@@ -24,7 +24,6 @@ using System.Diagnostics;
 namespace Proxem.NumNet
 {
     using static ShapeUtil;
-    using static Slicer;
 
     public static class Array_
     {
@@ -35,10 +34,10 @@ namespace Proxem.NumNet
         {
             var slice = axisA < slices.Length ? slices[axisA] : ..;
             var lower = a.GetAbsoluteIndex(slice.Start, axisA);
-            var upper = slice.IsSingleton() ? lower + 1 : a.GetAbsoluteIndex(slice.Stop, axisA);
+            var upper = slice.IsSingleton ? lower + 1 : a.GetAbsoluteIndex(slice.Stop, axisA);
             if (axisA == lastAxis)
             {
-                int n = !slice.IsSingleton() ? (upper - lower) / slice.Step + ((upper - lower) % slice.Step == 0 ? 0 : 1) : 1;
+                int n = !slice.IsSingleton ? (upper - lower) / slice.Step + ((upper - lower) % slice.Step == 0 ? 0 : 1) : 1;
                 var strideA = a.Shape.Length == 0 ? 1 : a.Stride[axisA];
                 var strideB = b.Shape.Length == 0 ? 1 : b.Stride[axisB];
                 op(n, a.Values, offseta + a.Offset + lower * strideA, strideA * slice.Step, b.Values, offsetb + b.Offset, strideB);
@@ -53,7 +52,7 @@ namespace Proxem.NumNet
                  *      - either A and B have the same shape,
                  *      - or B can't have any dim of shape 1.
                  */
-                var incb = (slice.IsSingleton() && b.Shape[axisB] != 1) ? 0 : 1;
+                var incb = (slice.IsSingleton && b.Shape[axisB] != 1) ? 0 : 1;
                 if (axisB >= b.Shape.Length - 1) incb = 0;
                 for (int i = lower; i < upper; i++)
                 {
@@ -72,10 +71,10 @@ namespace Proxem.NumNet
         {
             var slice = axisA < singletons.Length ? (Slice)singletons[axisA] : ..;
             var lower = a.GetAbsoluteIndex(slice.Start, axisA);
-            var upper = slice.IsSingleton() ? lower + 1 : a.GetAbsoluteIndex(slice.Stop, axisA);
+            var upper = slice.IsSingleton ? lower + 1 : a.GetAbsoluteIndex(slice.Stop, axisA);
             if (axisA == lastAxis)
             {
-                int n = !slice.IsSingleton() ? (upper - lower) / slice.Step + ((upper - lower) % slice.Step == 0 ? 0 : 1) : 1;
+                int n = !slice.IsSingleton ? (upper - lower) / slice.Step + ((upper - lower) % slice.Step == 0 ? 0 : 1) : 1;
                 var strideA = a.Shape.Length == 0 ? 1 : a.Stride[axisA];
                 var strideB = b.Shape.Length == 0 ? 1 : b.Stride[axisB];
                 op(n, a.Values, offseta + a.Offset + lower * strideA, strideA * slice.Step, b.Values, offsetb + b.Offset, strideB);
@@ -90,7 +89,7 @@ namespace Proxem.NumNet
                  *      - either A and B have the same shape,
                  *      - or B can't have any dim of shape 1.
                  */
-                var incb = (slice.IsSingleton() && b.Shape[axisB] != 1) ? 0 : 1;
+                var incb = (slice.IsSingleton && b.Shape[axisB] != 1) ? 0 : 1;
                 if (axisB >= b.Shape.Length - 1) incb = 0;
                 for (int i = lower; i < upper; i++)
                 {
@@ -108,10 +107,10 @@ namespace Proxem.NumNet
         {
             var slice = axisA < singletons.Length ? (Slice)singletons[axisA] : ..;
             var lower = a.GetAbsoluteIndex(slice.Start, axisA);
-            var upper = slice.IsSingleton() ? lower + 1 : a.GetAbsoluteIndex(slice.Stop, axisA);
+            var upper = slice.IsSingleton ? lower + 1 : a.GetAbsoluteIndex(slice.Stop, axisA);
             if (axisA == lastAxis)
             {
-                int n = !slice.IsSingleton() ? (upper - lower) / slice.Step + ((upper - lower) % slice.Step == 0 ? 0 : 1) : 1;
+                int n = !slice.IsSingleton ? (upper - lower) / slice.Step + ((upper - lower) % slice.Step == 0 ? 0 : 1) : 1;
                 var strideA = a.Shape.Length == 0 ? 1 : a.Stride[axisA];
                 var strideB = b.Shape.Length == 0 ? 1 : b.Stride[axisB];
                 op(n, a.Values, offseta + a.Offset + lower * strideA, strideA * slice.Step, b.Values, offsetb + b.Offset, strideB);
@@ -126,7 +125,7 @@ namespace Proxem.NumNet
                  *      - either A and B have the same shape,
                  *      - or B can't have any dim of shape 1.
                  */
-                var incb = (slice.IsSingleton() && b.Shape[axisB] != 1) ? 0 : 1;
+                var incb = (slice.IsSingleton && b.Shape[axisB] != 1) ? 0 : 1;
                 if (axisB >= b.Shape.Length - 1) incb = 0;
                 for (int i = lower; i < upper; i++)
                 {
@@ -527,7 +526,7 @@ namespace Proxem.NumNet
         {
             if (axis < 0) axis += array.NDim;
             var slices = array.Slices();
-            slices[axis] = keepDims ? 0..1 : Only(0);
+            slices[axis] = keepDims ? 0..1 : (Slice)0;
 
             int N = array.Shape[axis];
             int stride = array.Stride[axis];
@@ -547,7 +546,7 @@ namespace Proxem.NumNet
         {
             if (axis < 0) axis += array.NDim;
             var slices = array.Slices();
-            slices[axis] = keepDims ? 0..1 : Only(0);
+            slices[axis] = keepDims ? 0..1 : (Slice)0;
 
             int N = array.Shape[axis];
             int stride = array.Stride[axis];
