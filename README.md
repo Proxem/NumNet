@@ -15,7 +15,7 @@ NumNet is inspired by python's [numpy](http://www.numpy.org/) library to facilit
 
 ## Requirements
 
-NumNet is developed in .Net Standard 2.0 and is compatible with both .Net Framework and .Net Core thus working on Windows and Linux platform.
+NumNet is developed in .Net Core 3.0 thus working on Windows and Linux platforms.
 For Mac OS users there shouldn't be any problem but we didn't test extensively. 
 
 NumNet relies on **BlasNet** for the low level operations on arrays.
