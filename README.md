@@ -57,7 +57,7 @@ var M = NN.Range(30).Reshape(5, 6);
 ```
 
 To access a single value in the array we will use `M[i, j]`. 
-NumNet also supports more complex slicing functions.
+NumNet also supports more complex slicing functions by leveraging C# 8's new syntax for indices and ranges.
 To select the first column of the array we will use
 
 ```
