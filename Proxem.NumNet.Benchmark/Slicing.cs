@@ -38,9 +38,9 @@ namespace Proxem.NumNet.Benchmark
         [BenchmarkCategory("Slicing"), Benchmark]
         public void SlicingNumNet()
         {
-            var slice_1 = _numnet_3d[Slicer._, 0, 3];
-            var slice_2 = _numnet_3d[1, Slicer._, 2];
-            var slice_3 = _numnet_3d[2, 4, Slicer._];
+            var slice_1 = _numnet_3d[.., 0, 3];
+            var slice_2 = _numnet_3d[1, .., 2];
+            var slice_3 = _numnet_3d[2, 4, ..];
         }
 
         //[BenchmarkCategory("Slicing"), Benchmark]

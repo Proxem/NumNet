@@ -82,9 +82,9 @@ namespace Proxem.NumNet.Test
         {
             var a = NN.Diag(1, 2, 3, 4);
             var b = NN.Diag(2, 3);
-            var c = a[(1, 3), (1, 3)];
+            var c = a[1..3, 1..3];
             AssertArray.AreEqual(c, b);
-            c = a[(1, -1), (1, -1)];
+            c = a[1..^1, 1..^1];
             AssertArray.AreEqual(c, b);
         }
 
@@ -121,7 +121,7 @@ namespace Proxem.NumNet.Test
             //Blas.gemv(Order.RowMajor, Proxem.BlasNet.Transpose.NoTrans, 4, 3, 1.0f, m.Values, 0, 4, v.Values, 0, 1, 0.0f, result.Values, 0, 1);
 
             //Dot with slices
-            result = m[From(1), Upto(-1)].Dot(v[Upto(-1)]);
+            result = m[1.., ..^1].Dot(v[..^1]);
             expected = NN.Array<float>(8, 11);
             AssertArray.AreAlmostEqual(expected, result);
 
@@ -131,9 +131,9 @@ namespace Proxem.NumNet.Test
             AssertArray.AreAlmostEqual(expected, result);
 
             var t = NN.Ones<float>(6, 5, 4);
-            t[2, _, _] *= 2;
-            t[_, 1, _] *= -1;
-            t[_, _, 2] *= 3;
+            t[2, .., ..] *= 2;
+            t[.., 1, ..] *= -1;
+            t[.., .., 2] *= 3;
 
             m = NN.Array(new float[,]{
                 {1, -1, 1, 1},
@@ -143,8 +143,8 @@ namespace Proxem.NumNet.Test
             //Matrix dot with stride[1] != 1
             var y = NN.Array<float>(1, -1, 3, 2);
             var my = m.Dot(y);
-            var ty = t[(1, 3), Upto(-1), -1].Dot(y);
-            AssertArray.AreAlmostEqual(t[(1, 3), Upto(-1), -1], m);
+            var ty = t[1..3, ..^1, ^1].Dot(y);
+            AssertArray.AreAlmostEqual(t[1..3, ..^1, ^1], m);
             AssertArray.AreAlmostEqual(my, NN.Array<float>(7, 14));
             AssertArray.AreAlmostEqual(ty, my);
         }
@@ -202,7 +202,7 @@ namespace Proxem.NumNet.Test
             });
 
             var c = NN.Random.Uniform(-1f, 1f, 6, 3, 10).As<float>();
-            var r = c[(1, 4), Only(2), (9, 1, -2)];
+            var r = c[1..4, 2, (9..1, -2)];
             AssertArray.GenerateTests(a, a1 =>
             {
                 AssertArray.AreAlmostEqual(a_p_b, a1.Add(b));
@@ -228,7 +228,7 @@ namespace Proxem.NumNet.Test
             var ab = NN.Array<float>(2, 0, -2, 12);
 
             var c = NN.Random.Uniform(-1f, 1f, 10, 5).As<float>();
-            var r = c[(9, 1, -2), Only(2)];
+            var r = c[(9..1, -2), 2];
 
             AssertArray.GenerateTests(a, b, (a1, b1) =>
             {
@@ -264,7 +264,7 @@ namespace Proxem.NumNet.Test
             });
 
             var c = NN.Random.Uniform(-1f, 1f, 6, 3, 10).As<float>();
-            var r = c[(1, 4), Only(2), (9, 1, -2)];
+            var r = c[1..4, 2, (9..1, -2)];
             AssertArray.GenerateTests(a, a1 =>
             {
                 AssertArray.AreAlmostEqual(ab, a1 * b);
@@ -289,11 +289,11 @@ namespace Proxem.NumNet.Test
             });
             AssertArray.AreAlmostEqual(expected, outer);
 
-            var outer2 = outer[_, 2];
+            var outer2 = outer[.., 2];
             var expected2 = NN.Array<float>(0, 7, 14, 21, 28);
             AssertArray.AreAlmostEqual(expected2, outer2);
 
-            var outer3 = outer[_, (2, 3)];
+            var outer3 = outer[.., 2..3];
             var expected3 = NN.Array(new float[,]{
                 {0},
                 {7},
@@ -419,9 +419,9 @@ namespace Proxem.NumNet.Test
 
             var aT = NN.Transpose(a, 1, 0, 2).Copy(); // [2, 4, 5]
             var big = NN.Random.Uniform(-1f, 1f, 10, 4, 5);
-            big[From(-2)] = aT;
+            big[^2..] = aT;
 
-            var aTT = NN.Transpose(big[From(-2)], 1, 0, 2);
+            var aTT = NN.Transpose(big[^2..], 1, 0, 2);
 
             var aTT2_b0 = NN.TensorDot(aTT, new [] { 2 }, b, new[] { 0 });
             AssertArray.AreAlmostEqual(c, aTT2_b0);
@@ -784,14 +784,14 @@ namespace Proxem.NumNet.Test
             AssertArray.AreEqual(v0, NN.Copy(v));
             AssertArray.AreEqual(v0, NN.Copy<float>(v));
 
-            v[(2, 6)] = v[Upto(4)];
+            v[2..6] = v[..4];
             AssertArray.AreNotEqual(v0, v);
 
             var v1 = NN.Array<float>(2, 2, 2, 2, -1, 2, -1, 6, -1, 5);
             AssertArray.AreEqual(v1, v);
 
             v = v0.Copy();
-            v[(6, 2, -1)] = v[(4, null, -1)];
+            v[(6..2, -1)] = v[(4..Slicer.Start, -1)];
         }
 
         [TestMethod]

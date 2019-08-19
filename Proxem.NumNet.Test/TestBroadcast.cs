@@ -159,7 +159,7 @@ c=a+b[:,np.newaxis,:]
 
             var a = NN.Zeros(new[] { 3, 4, 5, 6 });
             var b = NN.Zeros(new[] { 4, 6 });
-            var c = a + b[_, NewAxis, _];
+            var c = a + b[.., NewAxis, ..];
 
             AssertArray.AreEqual(c.Shape, new[] { 3, 4, 5, 6 });
         }
@@ -176,7 +176,7 @@ b[:,np.newaxis,:]
             */
 
             var b = NN.Range(2 * 3).Reshape(2, 3);
-            var c = b[_, NewAxis, _];
+            var c = b[.., NewAxis, ..];
 
             AssertArray.AreEqual(c.Shape, new[] { 2, 1, 3 });
             AssertArray.AreEqual(c.Stride, new[] { 3, 0, 1 });

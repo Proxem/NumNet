@@ -199,7 +199,7 @@ namespace Proxem.NumNet.Test
             AssertArray.AreAlmostEqual(rightSingularVectors, vt, 1e-2, 1e-2);
 
             var sigma = NN.Zeros<double>(a.Shape[0], a.Shape[1]);
-            sigma[(0, s.Length), (0, s.Length)] = NN.Diag(s);
+            sigma[0..s.Length, 0..s.Length] = NN.Diag(s);
 
             // Final check: A = U.Sigma.Vt
             AssertArray.AreAlmostEqual(a, u.Dot(sigma).Dot(vt));
@@ -336,7 +336,7 @@ namespace Proxem.NumNet.Test
             Lapack.gesvd('A', 'A', m, n, copy, n, s, u.Values, m, vt.Values, n, superb);
 
             var invSigma = NN.Zeros<double>(n, m);
-            invSigma[(0, k), (0, k)] = NN.Diag(1 / NN.Array(s));
+            invSigma[0..k, 0..k] = NN.Diag(1 / NN.Array(s));
 
             var pseudoInv = vt.T.Dot(invSigma).Dot(u.T);
             return pseudoInv;
@@ -380,12 +380,12 @@ namespace Proxem.NumNet.Test
                 {  0.71,  0.63 },
                 {  0.13,  0.14 }
             });
-            var x = NN.Array(b).Reshape(-1, nrhs)[Upto(n)];
+            var x = NN.Array(b).Reshape(-1, nrhs)[..n];
             AssertArray.AreAlmostEqual(solution, x, 1e-2, 1e-2);
 
             // Residual sum of squares for the solution
             var residual = new[] { 195.36, 107.06 };
-            var bnm = NN.Array(b).Reshape(-1, nrhs)[(n, m)];
+            var bnm = NN.Array(b).Reshape(-1, nrhs)[n..m];
             for (int i = 0; i < residual.Length; i++)
             {
                 AssertArray.AreAlmostEqual(residual[i], NN.NormSqr(bnm[i]));

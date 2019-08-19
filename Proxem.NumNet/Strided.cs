@@ -51,7 +51,6 @@ namespace Proxem.NumNet
         /// <summary>The number of dimensions in this Array</summary>
         public int NDim { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { return Shape.Length; } }
 
-        /// <summary> Compute absolute values for negative indices </summary>
         public int GetAbsoluteIndex(int index, int axis)
         {
             if (index == int.MaxValue)
@@ -60,6 +59,17 @@ namespace Proxem.NumNet
                 return -1;
             else
                 return index >= 0 ? index : this.Shape[axis] + index;
+        }
+
+        public int GetAbsoluteIndex(Index index, int axis)
+        {
+            //return GetAbsoluteIndex(index.IsFromEnd ? -index.Value : index.Value, axis);
+            if (index.IsFromEnd)
+                return this.Shape[axis] - index.Value;
+            else if (index.Value == Slicer.Start)
+                return -1;
+            else
+                return index.Value;
         }
 
         /// <summary> Convert coordinates to offset </summary>
@@ -94,6 +104,19 @@ namespace Proxem.NumNet
         }
 
         public int RavelIndices(params int[] indices)
+        {
+            if (indices.Length > this.Shape.Length) throw new Exception("too many indices");
+            int result = this.Offset;
+            for (int axis = 0; axis < indices.Length; axis++)
+            {
+                var dim = GetAbsoluteIndex(indices[axis], axis);
+                if (dim >= this.Shape[axis]) throw new IndexOutOfRangeException($"index {indices} out of range 0<=index<{Shape[axis]}");
+                result += dim * this.Stride[axis];
+            }
+            return result;
+        }
+
+        public int RavelIndices(params Index[] indices)
         {
             if (indices.Length > this.Shape.Length) throw new Exception("too many indices");
             int result = this.Offset;
@@ -141,7 +164,7 @@ namespace Proxem.NumNet
 
     public static class StridedExtension
     {
-        public static Slice[] Slices<T>(this Strided<T> a) => a.Shape.Select(d => Range(0, d)).ToArray();
+        public static Slice[] Slices<T>(this Strided<T> a) => a.Shape.Select(d => (Slice)(0..d)).ToArray();
 
         public static int ComputeSize(int[] shape)
         {

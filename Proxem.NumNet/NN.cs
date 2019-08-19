@@ -232,7 +232,8 @@ namespace Proxem.NumNet
         {
             var x = Zeros<T>(shape);
             var one = NumNet.Array<T>.Operators.Convert(1);
-            x.Item[hot] = one;
+            var indices = hot.Select(i => (Index)i).ToArray();      // TODO: optimize
+            x.Item[indices] = one;
             return x;
         }
 
@@ -302,7 +303,7 @@ namespace Proxem.NumNet
         public static Array<T> Concat<T>(int axis, Array<T>[] inputs, Array<T> result)
         {
             var slices = result.Slices();
-            slices[axis] = Slicer.Upto(inputs[0].Shape[axis]);
+            slices[axis] = ..inputs[0].Shape[axis];
             var view = result[slices];
             Copy(inputs[0], view);
             var stride = view.Stride[axis];
@@ -547,11 +548,11 @@ namespace Proxem.NumNet
             // as result have one more shape than thiz and selected, we have to lie about the number of shapes
             var resultSlices = new Slice[dim];
             for (int i = 0; i < dim; ++i)
-                resultSlices[i] = Slicer._;
+                resultSlices[i] = ..;
             if (!keepDims)
                 resultSlices[axis] = 0;
             else
-                resultSlices[axis] = Slicer.Upto(1);
+                resultSlices[axis] = ..1;
             var res = result[resultSlices];
 
             Array_.ElementwiseOp(thiz, selected, res,

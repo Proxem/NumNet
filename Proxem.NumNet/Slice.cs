@@ -33,30 +33,33 @@ namespace Proxem.NumNet
 #else
     public struct Slice
     {
-        public int Start;
-        public int Stop;           // MinValue => singleton, MaxValue => last dim
+        public Range Range;
         public int Step;
 
-        public Slice(int start, int stop, int step = 1)
+        public Slice(Range range, int step = 1)
         {
-            this.Start = start;
-            this.Stop = stop;
+            this.Range = range;
             this.Step = step;
         }
 
-        public static implicit operator Slice(int i) => Slicer.Only(i);
+        public Index Start => Range.Start;
+        public Index Stop => Range.End;
 
-        public static implicit operator Slice((int start, int stop) s) => new Slice(s.start, s.stop);
+        public static implicit operator Slice(int i) => (i..i, 0);
 
-        public static implicit operator Slice((int start, int stop, int step) s) => new Slice(s.start, s.stop, s.step);
+        public static implicit operator Slice(Index i) => (i..i, 0);
 
-        public static implicit operator Slice((int? start, int stop) s) => Slicer.Range(s.start, s.stop);
+        public static implicit operator Slice(Range s) => new Slice(s);
 
-        public static implicit operator Slice((int? start, int stop, int step) s) => Slicer.Range(s.start, s.stop, s.step);
+        public static implicit operator Slice((Range range, int step) s) => new Slice(s.range, s.step);
 
-        public static implicit operator Slice((int start, int? stop) s) => Slicer.Range(s.start, s.stop);
+        //public static implicit operator Slice((int? start, int stop) s) => Slicer.Range(s.start, s.stop);
 
-        public static implicit operator Slice((int start, int? stop, int step) s) => Slicer.Range(s.start, s.stop, s.step);
+        //public static implicit operator Slice((int? start, int stop, int step) s) => Slicer.Range(s.start, s.stop, s.step);
+
+        //public static implicit operator Slice((int start, int? stop) s) => Slicer.Range(s.start, s.stop);
+
+        //public static implicit operator Slice((int start, int? stop, int step) s) => Slicer.Range(s.start, s.stop, s.step);
 
         public bool IsSingleton()
         {
@@ -65,17 +68,15 @@ namespace Proxem.NumNet
 
         public bool IsNewAxis()
         {
-            return this.Step == int.MaxValue;
+            return this.Step == Slicer.NewAxisStep;
         }
 
         public override string ToString()
         {
-            if (this.IsSingleton()) return this.Start.ToString();
+            if (this.IsSingleton()) return this.Range.Start.ToString();
 
             var result = new StringBuilder();
-            if (this.Start != 0) result.Append(this.Start);
-            result.Append(':');
-            if (this.Stop != int.MaxValue) result.Append(this.Stop);
+            result.Append(this.Range);
             if (this.Step != 1)
             {
                 result.Append(':');
@@ -88,54 +89,19 @@ namespace Proxem.NumNet
 
     public static class Slicer
     {
-        public static readonly Slice _ = Range(0, null);
-        public static readonly Slice NewAxis = Range(0, 0, int.MaxValue);
-
-        public static Slice Range(int start, int stop, int step = 1)
-        {
-            return new Slice(start, stop, step);
-        }
-
-        public static Slice Range(int start, int? stop, int step = 1)
-        {
-            if (stop == null) return From(start, step);
-            throw new Exception("invalid stop value");
-        }
-
-        public static Slice Range(int? start, int stop, int step = 1)
-        {
-            if (start == null) return Upto(stop, step);
-            throw new Exception("invalid start value");
-        }
+        public const int Start = int.MaxValue;
+        public const int NewAxisStep = int.MaxValue;
+        public static readonly Slice NewAxis = (0..0, NewAxisStep);
 
         public static Slice Only(int i)
         {
-            return new Slice(i, i + 1, 0);
+            return (i..i, 0);
         }
 
         public static Slice Step(int step)
         {
-            if (step < 0) return new Slice(-1, int.MinValue, step);
-            return new Slice(0, int.MaxValue, step);
-        }
-
-        [Obsolete("Use Upto")]
-        public static Slice Until(int stop, int step = 1)
-        {
-            if (step < 0) return new Slice(-1, stop, step);
-            else return new Slice(0, stop, step);
-        }
-
-        public static Slice Upto(int stop, int step = 1)
-        {
-            if (step < 0) return new Slice(-1, stop, step);
-            else return new Slice(0, stop, step);
-        }
-
-        public static Slice From(int start, int step = 1)
-        {
-            if (step < 0) return new Slice(start, int.MinValue, step);
-            else return new Slice(start, int.MaxValue, step);
+            if (step < 0) return (^1..Start, step);
+            return (.., step);
         }
     }
 }

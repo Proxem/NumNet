@@ -32,9 +32,9 @@ namespace Proxem.NumNet.Test
         public void TestCombine()
         {
             var t = NN.Ones<float>(5, 4, 3);
-            t[2, _, _] *= 2;
-            t[_, 1, _] *= -1;
-            t[_, _, 2] *= 3;
+            t[2, .., ..] *= 2;
+            t[.., 1, ..] *= -1;
+            t[.., .., 2] *= 3;
 
             var x = NN.Array<float>(1, -1, 3);
             var y = NN.Array<float>(1, -1, 3, 2);
@@ -70,22 +70,22 @@ namespace Proxem.NumNet.Test
         public void TestCombineWithBias3D_1D()
         {
             var t = NN.Ones<float>(6, 5, 4);
-            t[2, _, _] *= 2;
-            t[_, 1, _] *= -1;
-            t[_, _, 2] *= 3;
+            t[2, .., ..] *= 2;
+            t[.., 1, ..] *= -1;
+            t[.., .., 2] *= 3;
 
             var x = NN.Array<float>(1, -1, -2);
             var y = NN.Array<float>(1, -1, 3, 1);
 
             Array<float> txy2 = null;
-            txy2 = t[_, Upto(-1), Upto(-1)].Combine(x, y, result: txy2);
+            txy2 = t[.., ..^1, ..^1].Combine(x, y, result: txy2);
 
             var txy = t.CombineWithBias(x, y);
 
             var xb = NN.Ones<float>(4);
-            xb[Upto(-1)] = x;
+            xb[..^1] = x;
             var yb = NN.Ones<float>(5);
-            yb[Upto(-1)] = y;
+            yb[..^1] = y;
 
             var txbyb = t.Combine(xb, yb);
 

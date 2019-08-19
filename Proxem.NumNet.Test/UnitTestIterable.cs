@@ -47,7 +47,7 @@ namespace Proxem.NumNet.Test
             var eq = x.Zip(m1, Tuple.Create).Min(xy => xy.Item1 == xy.Item2);
             Assert.IsTrue(eq);
 
-            var m2 = m1[From(1), (1, 3)];
+            var m2 = m1[1.., 1..3];
             var s2 = string.Join("", m2);
             Assert.AreEqual("2334", string.Join("", m2));
 
@@ -55,7 +55,7 @@ namespace Proxem.NumNet.Test
             eq = x.Zip(m2, Tuple.Create).Min(xy => xy.Item1 == xy.Item2);
             Assert.IsTrue(eq);
 
-            var m3 = m1[Only(1), (1, 3)];
+            var m3 = m1[1, 1..3];
             x = new List<int>() { 2, 3 };
             eq = x.Zip(m2, Tuple.Create).Min(xy => xy.Item1 == xy.Item2);
             Assert.IsTrue(eq);
@@ -74,7 +74,7 @@ namespace Proxem.NumNet.Test
             Assert.AreEqual(l1.Count, m1.Size);
             Assert.AreEqual(expected1.ToString(), s1);
 
-            var m2 = m1[(1, 3), (2, 4), (2, 5)];
+            var m2 = m1[1..3, 2..4, 2..5];
             Assert.AreEqual(m2.Size, m2.Count());
 
             var s2 = string.Join(",", m2) + ",";
@@ -109,11 +109,11 @@ namespace Proxem.NumNet.Test
             AssertArray.AreEqual(new[] { 0, 4, 8 }, offsets);
 
             // offsets of sliced mat
-            offsets = m[_, (1, 3)].GetOffsets(new[] { 3, 2 }).ToArray();
+            offsets = m[.., 1..3].GetOffsets(new[] { 3, 2 }).ToArray();
             AssertArray.AreEqual(new[] { 1, 5, 9 }, offsets);
 
             // offsets of sliced vec
-            offsets = v[From(3)].GetOffsets(new[] { 5 }).ToArray();
+            offsets = v[3..].GetOffsets(new[] { 5 }).ToArray();
             AssertArray.AreEqual(new[] { 3 }, offsets);
 
             // offsets of left broadcasted vec

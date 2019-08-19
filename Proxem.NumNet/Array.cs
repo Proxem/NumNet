@@ -31,7 +31,7 @@ namespace Proxem.NumNet
 
     /// <summary>N-dimensionnal arrays. Inspired from <a href="http://docs.scipy.org/doc/numpy/reference/arrays.ndarray.html">NumPy ndarray</a>.</summary>
     [DebuggerDisplay("{_debugString}")]
-    public class Array<Type> : Strided<Type>, IEnumerable<Type>, IIndexable<int, Type>
+    public class Array<Type> : Strided<Type>, IEnumerable<Type>, IIndexable<Index, Type>
     {
         internal static Operators<Type> Operators;
 
@@ -302,14 +302,14 @@ namespace Proxem.NumNet
         }
 
         /// <summary>A view on the Array that can only be indexed by coordinates (instead of slices)</summary>
-        public IIndexable<int, Type> Item
+        public IIndexable<Index, Type> Item
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get { return this; }
         }
 
         /// <summary>Access an item of the Array from its coordinates</summary>
-        Type IIndexable<int, Type>.this[int i0]
+        Type IIndexable<Index, Type>.this[Index i0]
         {
             get
             {
@@ -330,7 +330,7 @@ namespace Proxem.NumNet
         }
 
         /// <summary>Access an item of the Array from its coordinates</summary>
-        Type IIndexable<int, Type>.this[int i0, int i1]
+        Type IIndexable<Index, Type>.this[Index i0, Index i1]
         {
             get
             {
@@ -351,7 +351,7 @@ namespace Proxem.NumNet
         }
 
         /// <summary>Access an item of the Array from its coordinates</summary>
-        Type IIndexable<int, Type>.this[int i0, int i1, int i2]
+        Type IIndexable<Index, Type>.this[Index i0, Index i1, Index i2]
         {
             get
             {
@@ -372,7 +372,7 @@ namespace Proxem.NumNet
         }
 
         /// <summary>Access an item of the Array from its coordinates</summary>
-        Type IIndexable<int, Type>.this[params int[] indices]
+        Type IIndexable<Index, Type>.this[params Index[] indices]
         {
             get
             {
@@ -387,7 +387,7 @@ namespace Proxem.NumNet
                     var slices = new Slice[this.Shape.Length];
                     for (int i = 0; i < slices.Length; i++)
                     {
-                        slices[i] = i < indices.Length ? (Slice)indices[i] : Slicer._;
+                        slices[i] = i < indices.Length ? (Slice)indices[i] : ..;
                     }
                     this[slices] = new Array<Type>(new[] { 1 }, new Type[] { value }, 0, new int[] { 0 });
                     return;
@@ -432,8 +432,110 @@ namespace Proxem.NumNet
                 int k = 0;
                 while (j < count || i < Shape.Length)
                 {
-                    var slice = k < singletons.Length ? singletons[k] : Slicer._;
-                    var a = this.GetAbsoluteIndex(slice.Start, i);
+                    var slice = k < singletons.Length ? (Slice)singletons[k] : ..;
+                    var a = this.GetAbsoluteIndex(slice.Range.Start, i);
+                    if (a < 0 || a >= Shape[i])
+                        throw new ArgumentException($"Slice [{slice.ToString()}] isn't valid for axis {i} of dim {Shape[i]}");
+                    offset += a * this.Stride[i];
+                    if (!slice.IsSingleton())    // if singleton, skip axis
+                    {
+                        var b = this.GetAbsoluteIndex(slice.Stop, i);
+                        if (slice.Step >= 0)
+                        {
+                            if (b < a || b > Shape[i])
+                                throw new ArgumentException($"Slice [{slice.ToString()}] isn't valid for axis {i} of dim {Shape[i]}");
+                        }
+                        else
+                        {
+                            if (a < b || b >= Shape[i])
+                                throw new ArgumentException($"Slice [{slice.ToString()}] isn't valid for axis {i} of dim {Shape[i]}");
+                        }
+                        shape[j] = (b - a) / slice.Step + ((b - a) % slice.Step == 0 ? 0 : 1);
+                        stride[j] = this.Stride[i] * slice.Step;
+                        ++j;
+                    }
+                    ++i;
+                    ++k;
+                }
+
+                var result = new Array<Type>(shape, this.Values, offset, stride);
+                result.Flags |= Flags.NotContiguous;        // TODO: refine => some case are still contiguous
+                return result;
+            }
+            set
+            {
+                if (singletons.Length > this.Shape.Length) throw new RankException("too many indices");
+
+                if (value.NDim == 0)
+                {
+                    var y = value.Values[value.Offset];
+                    var offset = RavelIndices(singletons);
+                    if (singletons.Length == NDim)
+                        Values[offset] = y;
+                    else
+                        Array_.ElementwiseOp(singletons.Length, this, offset, (n, x, offsetx, incx) =>
+                        {
+                            for (int i = 0; i < n; i++)
+                            {
+                                x[offsetx] = y;
+                                offsetx += incx;
+                            }
+                        });
+                }
+                else
+                {
+                    int sLength = singletons.Length;
+                    int ndim = NDim;
+                    int v_ndim = value.NDim;
+
+                    for (int a = 0; a + sLength < NDim && a < v_ndim; ++a)
+                        if (value.Shape[a] != 1 && Shape[a + sLength] != value.Shape[a])
+                            throw new RankException($"Can't set slice of shape {AssertArray.FormatShape(this[singletons].Shape)} with values of a {AssertArray.FormatShape(value.Shape)} array.");
+
+                    var lastAxis = this.Shape.Length - 1;
+                    int offset = 0;
+                    while (lastAxis != 0 && lastAxis < singletons.Length)
+                    {
+                        offset += this.GetAbsoluteIndex(singletons[lastAxis], lastAxis) * this.Stride[lastAxis];
+                        --lastAxis;
+                    }
+                    Array_.ElementwiseOp(0, 0, lastAxis, this, offset, singletons, value, 0,
+                    (n, x, offsetx, incx, y, offsety, incy) =>
+                    {
+                        //Blas.copy(n, b, offsetb, incb, a, offseta, inca);
+                        if (incx == 1 && incy == 1)
+                            Array.Copy(y, offsety, x, offsetx, n);
+                        else
+                            for (int i = 0; i < n; i++)
+                            {
+                                x[offsetx] = y[offsety];
+                                offsetx += incx;
+                                offsety += incy;
+                            }
+                    });
+                }
+            }
+        }
+
+        [IndexerName("Slice")]
+        public Array<Type> this[params Index[] singletons]
+        {
+            get
+            {
+                int count = this.Shape.Length - singletons.Length;
+                if (count == 0)
+                    return new Array<Type>(EmptyArray<int>.Value, this.Values, this.RavelIndices(singletons), EmptyArray<int>.Value);
+
+                var shape = new int[count];
+                var offset = this.Offset;
+                var stride = new int[count];
+                int i = 0;
+                int j = 0;
+                int k = 0;
+                while (j < count || i < Shape.Length)
+                {
+                    var slice = k < singletons.Length ? (Slice)singletons[k] : ..;
+                    var a = this.GetAbsoluteIndex(slice.Range.Start, i);
                     if (a < 0 || a >= Shape[i])
                         throw new ArgumentException($"Slice [{slice.ToString()}] isn't valid for axis {i} of dim {Shape[i]}");
                     offset += a * this.Stride[i];
@@ -550,7 +652,7 @@ namespace Proxem.NumNet
                 int k = 0;
                 while (j < count || i < this.Shape.Length)
                 {
-                    var slice = k < slices.Length ? slices[k] : Slicer._;
+                    var slice = k < slices.Length ? slices[k] : ..;
                     if (slice.IsNewAxis())
                     {
                         shape[j] = 1;
@@ -636,6 +738,9 @@ namespace Proxem.NumNet
         [IndexerName("Slice")]
         public Array<Type> this[params Array<int>[] indexArrays] => IndexWith(indexArrays);
 
+        [IndexerName("Slice")]
+        public Array<Type> this[params Array<Index>[] indexArrays] => IndexWith(indexArrays);
+
         /// <summary> Advanced indexing </summary>
         public Array<Type> IndexWith(Array<int>[] indexArrays, Array<Type> result = null)
         {
@@ -654,8 +759,8 @@ namespace Proxem.NumNet
                     // TODO: broadcast
                     if (indexArrays[i].NDim != ndim)
                         throw new NotImplementedException("Arrays don't have same shapes");
-                    for(int d = 0; d < ndim; ++d)
-                        if(indexArrays[i].Shape[d] != shape[d])
+                    for (int d = 0; d < ndim; ++d)
+                        if (indexArrays[i].Shape[d] != shape[d])
                             throw new NotImplementedException("Arrays don't have same shapes");
                 }
 
@@ -670,19 +775,22 @@ namespace Proxem.NumNet
                 // "Advanced indexing always returns a copy of the data (contrast with basic slicing that returns a view)."
                 result?.AssertOfShape(shape);
                 result = result ?? new Array<Type>(shape);
-                if(firstArray.NDim == 0)
+                if (firstArray.NDim == 0)
                 {
                     result = this.Item[(int)indexArrays[0]];
                     return result;
                 }
                 else if (firstArray.Shape.Length == 1)
                 {
-                    var indices = new int[indexArrays.Length];
+                    var indices = new Index[indexArrays.Length];
                     for (int axis0 = 0; axis0 < firstArray.Shape[0]; axis0++)
                     {
                         for (int i = 0; i < indices.Length; i++)
-                            indices[i] = indexArrays[i].Item[axis0];
-                        if(result.NDim == 1)
+                        {
+                            var index = indexArrays[i].Item[axis0];
+                            indices[i] = index >= 0 ? index : new Index(-index, fromEnd: true);
+                        }
+                        if (result.NDim == 1)
                             result.Item[axis0] = this.Item[indices];
                         else
                             result[axis0] = this[indices];
@@ -691,7 +799,7 @@ namespace Proxem.NumNet
                 }
                 else if (firstArray.Shape.Length == 2)
                 {
-                    var indices = new int[indexArrays.Length];
+                    var indices = new Index[indexArrays.Length];
                     for (int axis0 = 0; axis0 < firstArray.Shape[0]; axis0++)
                         for (int axis1 = 0; axis1 < firstArray.Shape[1]; axis1++)
                         {
@@ -706,7 +814,7 @@ namespace Proxem.NumNet
                 }
                 else if (firstArray.Shape.Length == 3)
                 {
-                    var fastResult = result.FastArray;                    
+                    var fastResult = result.FastArray;
                     var indices = new int[indexArrays.Length];
                     for (int axis0 = 0; axis0 < firstArray.Shape[0]; ++axis0)
                         for (int axis1 = 0; axis1 < firstArray.Shape[1]; ++axis1)
@@ -725,6 +833,130 @@ namespace Proxem.NumNet
                                         var index = ia.Values[ia.Offset + axis0 * stride[0] + axis1 * stride[1] + axis2 * stride[2]];
                                         if (index < 0) index += this.Shape[i];
                                         offset += this.Stride[i] * index;
+                                    }
+                                    //result.Item[axis0, axis1, axis2] = this.Item[indices];
+                                    //fastResult[axis0, axis1, axis2] = ;
+                                    //var v1 = this.Item[indices];
+                                    var v2 = this.Values[offset];
+                                    fastResult[axis0, axis1, axis2] = v2;
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < indices.Length; ++i)
+                                    {
+                                        //indices[i] = indexArrays[i].Item[axis0, axis1, axis2];
+                                        //indices[i] = indexArrays[i].FastArray[axis0, axis1, axis2];
+                                        var ia = indexArrays[i];
+                                        var stride = ia.Stride;
+                                        indices[i] = ia.Values[ia.Offset + axis0 * stride[0] + axis1 * stride[1] + axis2 * stride[2]];
+                                    }
+                                    result[axis0, axis1, axis2] = this[indices];
+                                }
+                            }
+                    return result;
+                }
+                else
+                    // TODO
+                    throw new NotImplementedException("Indexing with arrays of ndim > 3 is not supported yet");
+            }
+            else
+                throw new ArgumentException($"A {NDim} array can't be indexed with {indexArrays.Length} arrays (max is {NDim}).");
+        }
+
+        /// <summary> Advanced indexing </summary>
+        public Array<Type> IndexWith(Array<Index>[] indexArrays, Array<Type> result = null)
+        {
+            // http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html#advanced-indexing
+            if (indexArrays.Length <= this.Shape.Length)
+            {
+                // "When the index consists of as many integer arrays as the array being indexed has dimensions, the indexing is"
+                // "straight forward, but different from slicing."
+
+                // "Note that the result shape is identical to the (broadcast) indexing array shapes ind_1, ..., ind_N."
+                var firstArray = indexArrays[0];
+                var shape = firstArray.Shape;
+                var ndim = shape.Length;
+                for (int i = 1; i < indexArrays.Length; i++)
+                {
+                    // TODO: broadcast
+                    if (indexArrays[i].NDim != ndim)
+                        throw new NotImplementedException("Arrays don't have same shapes");
+                    for (int d = 0; d < ndim; ++d)
+                        if (indexArrays[i].Shape[d] != shape[d])
+                            throw new NotImplementedException("Arrays don't have same shapes");
+                }
+
+                var extra = this.Shape.Length - indexArrays.Length;
+                if (extra != 0)
+                {
+                    shape = new int[firstArray.Shape.Length + extra];
+                    Array.Copy(firstArray.Shape, shape, firstArray.Shape.Length);
+                    Array.Copy(this.Shape, this.Shape.Length - extra, shape, firstArray.Shape.Length, extra);
+                }
+
+                // "Advanced indexing always returns a copy of the data (contrast with basic slicing that returns a view)."
+                result?.AssertOfShape(shape);
+                result = result ?? new Array<Type>(shape);
+                if (firstArray.NDim == 0)
+                {
+                    result = this.Item[(Index)indexArrays[0]];
+                    return result;
+                }
+                else if (firstArray.Shape.Length == 1)
+                {
+                    var indices = new Index[indexArrays.Length];
+                    for (int axis0 = 0; axis0 < firstArray.Shape[0]; axis0++)
+                    {
+                        for (int i = 0; i < indices.Length; i++)
+                        {
+                            var index = indexArrays[i].Item[axis0];
+                            indices[i] = index;
+                        }
+                        if (result.NDim == 1)
+                            result.Item[axis0] = this.Item[indices];
+                        else
+                            result[axis0] = this[indices];
+                    }
+                    return result;
+                }
+                else if (firstArray.Shape.Length == 2)
+                {
+                    var indices = new Index[indexArrays.Length];
+                    for (int axis0 = 0; axis0 < firstArray.Shape[0]; axis0++)
+                        for (int axis1 = 0; axis1 < firstArray.Shape[1]; axis1++)
+                        {
+                            for (int i = 0; i < indices.Length; i++)
+                                indices[i] = indexArrays[i].Item[axis0, axis1];
+                            if (result.NDim == 2)
+                                result.Item[axis0, axis1] = this.Item[indices];
+                            else
+                                result[axis0, axis1] = this[indices];
+                        }
+                    return result;
+                }
+                else if (firstArray.Shape.Length == 3)
+                {
+                    var fastResult = result.FastArray;
+                    var indices = new Index[indexArrays.Length];
+                    for (int axis0 = 0; axis0 < firstArray.Shape[0]; ++axis0)
+                        for (int axis1 = 0; axis1 < firstArray.Shape[1]; ++axis1)
+                            for (int axis2 = 0; axis2 < firstArray.Shape[2]; ++axis2)
+                            {
+                                if (result.NDim == 3)
+                                {
+                                    var offset = this.Offset;
+                                    for (int i = 0; i < indices.Length; ++i)
+                                    {
+                                        //indices[i] = indexArrays[i].Item[axis0, axis1, axis2];
+                                        //indices[i] = indexArrays[i].FastArray[axis0, axis1, axis2];
+                                        var ia = indexArrays[i];
+                                        var stride = ia.Stride;
+                                        //indices[i] = ia.Values[ia.Offset + axis0 * stride[0] + axis1 * stride[1] + axis2 * stride[2]];
+                                        var index = ia.Values[ia.Offset + axis0 * stride[0] + axis1 * stride[1] + axis2 * stride[2]];
+                                        if (index.IsFromEnd)
+                                            offset += this.Stride[i] * (index.Value + this.Shape[i]);
+                                        else 
+                                            offset += this.Stride[i] * index.Value;
                                     }
                                     //result.Item[axis0, axis1, axis2] = this.Item[indices];
                                     //fastResult[axis0, axis1, axis2] = ;

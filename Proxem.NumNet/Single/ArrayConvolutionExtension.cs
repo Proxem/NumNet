@@ -63,7 +63,7 @@ namespace Proxem.NumNet.Single
 
             if (mode == ConvMode.Full)
                 for (int k = 0; k < nk; ++k)
-                    result[(k, k + na)].Acc(a, alpha: kernel.Item[k]);
+                    result[k..(k + na)].Acc(a, alpha: kernel.Item[k]);
             else
             {
                 int delta = nFull - nr;
@@ -73,8 +73,8 @@ namespace Proxem.NumNet.Single
                 {
                     var iMin = Math.Max(d0 - k, 0);
                     var iMax = Math.Min(nr + d0 - k, na);
-                    var r = result[(iMin + k - d0, iMax + k - d0)];
-                    r.Acc(a[(iMin, iMax)], alpha: kernel.Item[k]);
+                    var r = result[(iMin + k - d0)..(iMax + k - d0)];
+                    r.Acc(a[iMin..iMax], alpha: kernel.Item[k]);
                 }
             }
 
@@ -97,7 +97,7 @@ namespace Proxem.NumNet.Single
 
             if (mode == ConvMode.Full)
                 for (int k = 0; k < nk; ++k)
-                    result[(k, k + na)].Acc(a, alpha: kernel.Item[nk - 1 - k]);
+                    result[k..(k + na)].Acc(a, alpha: kernel.Item[nk - 1 - k]);
             else
             {
                 int delta = nFull - nr;
@@ -107,8 +107,8 @@ namespace Proxem.NumNet.Single
                 {
                     var iMin = Math.Max(d0 - k, 0);
                     var iMax = Math.Min(nr + d0 - k, na);
-                    var r = result[(iMin + k - d0, iMax + k - d0)];
-                    r.Acc(a[(iMin, iMax)], alpha: kernel.Item[nk - 1 - k]);
+                    var r = result[(iMin + k - d0)..(iMax + k - d0)];
+                    r.Acc(a[iMin..iMax], alpha: kernel.Item[nk - 1 - k]);
                 }
             }
 

@@ -43,7 +43,7 @@ namespace Proxem.NumNet.Double
 
             if (mode == ConvMode.Full)
                 for (int k = 0; k < nk; ++k)
-                    result[(k, k + na)].Acc(a, alpha: kernel.Item[k]);
+                    result[k..(k + na)].Acc(a, alpha: kernel.Item[k]);
 
             else if (mode == ConvMode.Same)
             {
@@ -57,8 +57,8 @@ namespace Proxem.NumNet.Double
                     //        result[k + i - d0] += kernel[k] * a[i];
                     var iMin = Math.Max(d0 - k, 0);
                     var iMax = Math.Min(nr + d0 - k, na);
-                    var r = result[(iMin + k - d0, iMax + k - d0)];
-                    r.Add(a[(iMin, iMax)], alpha: kernel.Item[k], result: r);
+                    var r = result[(iMin + k - d0)..(iMax + k - d0)];
+                    r.Add(a[iMin..iMax], alpha: kernel.Item[k], result: r);
                 }
             }
             else if (mode == ConvMode.Valid)
@@ -70,7 +70,7 @@ namespace Proxem.NumNet.Double
                 {
                     var iMin = Math.Max(d0 - k, 0);
                     var iMax = Math.Min(nr + d0 - k, na);
-                    result.Acc(a[(iMin, iMax)], alpha: kernel.Item[k]);
+                    result.Acc(a[iMin..iMax], alpha: kernel.Item[k]);
                 }
             }
 
@@ -96,7 +96,7 @@ namespace Proxem.NumNet.Double
 
             if (mode == ConvMode.Full)
                 for (int k = 0; k < nk; ++k)
-                    result[(k, k + na)].Acc(a, alpha: kernel.Item[nk - 1 - k]);
+                    result[k..(k + na)].Acc(a, alpha: kernel.Item[nk - 1 - k]);
 
             else if (mode == ConvMode.Same || mode == ConvMode.Valid)
             {
@@ -107,8 +107,8 @@ namespace Proxem.NumNet.Double
                 {
                     var iMin = Math.Max(d0 - k, 0);
                     var iMax = Math.Min(nr + d0 - k, na);
-                    var r = result[(iMin + k - d0, iMax + k - d0)];
-                    r.Acc(a[(iMin, iMax)], alpha: kernel.Item[nk - 1 - k]);
+                    var r = result[(iMin + k - d0)..(iMax + k - d0)];
+                    r.Acc(a[iMin..iMax], alpha: kernel.Item[nk - 1 - k]);
                 }
             }
 
