@@ -27,35 +27,29 @@ namespace Proxem.NumNet
         public Range Range;
         public int Step;
 
-        public const int MinusOne = int.MaxValue;
-        public static readonly Slice NewAxis = (0..0, NewAxisStep); // TODO: use null
-
-        private const int NewAxisStep = int.MaxValue;
+        public const int MinusOne = int.MaxValue;   // -1 is not accepted for Range.End, use MinusOne instead
 
         public static Slice Downward(int step = -1)
         {
+            if (step >= 0) throw new Exception($"Negative step excepted, got {step}");
             return (^1..MinusOne, step);
         }
+
         public Slice(Range range, int step = 1)
         {
             this.Range = range;
             this.Step = step;
         }
 
-        public Index Start => Range.Start;
-        public Index Stop => Range.End;
+        public bool IsSingleton => this.Step == 0;
 
         public static implicit operator Slice(int i) => (i..i, 0);
 
         public static implicit operator Slice(Index i) => (i..i, 0);
 
-        public static implicit operator Slice(Range s) => new Slice(s);
+        public static implicit operator Slice(Range s) => (s, 1);
 
         public static implicit operator Slice((Range range, int step) s) => new Slice(s.range, s.step);
-
-        public bool IsSingleton => this.Step == 0;
-
-        public bool IsNewAxis => this.Step == NewAxisStep;
 
         public override string ToString()
         {

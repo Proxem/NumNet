@@ -134,7 +134,22 @@ namespace Proxem.NumNet
             int result = this.Offset;
             for (int axis = 0; axis < slices.Length; axis++)
             {
-                var dim = GetAbsoluteIndex(slices[axis].Start, axis);
+                var dim = GetAbsoluteIndex(slices[axis].Range.Start, axis);
+                if (dim >= this.Shape[axis]) throw new IndexOutOfRangeException($"index {slices} out of range 0<=index<{Shape[axis]}");
+                result += dim * this.Stride[axis];
+            }
+            return result;
+        }
+
+        protected int RavelIndicesStart(Slice?[] slices)
+        {
+            if (slices.Length > this.Shape.Length) throw new Exception("too many indices");
+            int result = this.Offset;
+            for (int axis = 0; axis < slices.Length; axis++)         
+            {
+                ref var slice = ref slices[axis];
+                if (slice == null) continue;
+                var dim = GetAbsoluteIndex(slice.Value.Range.Start, axis);
                 if (dim >= this.Shape[axis]) throw new IndexOutOfRangeException($"index {slices} out of range 0<=index<{Shape[axis]}");
                 result += dim * this.Stride[axis];
             }

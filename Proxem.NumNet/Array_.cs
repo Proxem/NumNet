@@ -33,8 +33,8 @@ namespace Proxem.NumNet
             Action<int, T1[], int, int, T2[], int, int> op)
         {
             var slice = axisA < slices.Length ? slices[axisA] : ..;
-            var lower = a.GetAbsoluteIndex(slice.Start, axisA);
-            var upper = slice.IsSingleton ? lower + 1 : a.GetAbsoluteIndex(slice.Stop, axisA);
+            var lower = a.GetAbsoluteIndex(slice.Range.Start, axisA);
+            var upper = slice.IsSingleton ? lower + 1 : a.GetAbsoluteIndex(slice.Range.End, axisA);
             if (axisA == lastAxis)
             {
                 int n = !slice.IsSingleton ? (upper - lower) / slice.Step + ((upper - lower) % slice.Step == 0 ? 0 : 1) : 1;
@@ -70,8 +70,8 @@ namespace Proxem.NumNet
             Action<int, T1[], int, int, T2[], int, int> op)
         {
             var slice = axisA < singletons.Length ? (Slice)singletons[axisA] : ..;
-            var lower = a.GetAbsoluteIndex(slice.Start, axisA);
-            var upper = slice.IsSingleton ? lower + 1 : a.GetAbsoluteIndex(slice.Stop, axisA);
+            var lower = a.GetAbsoluteIndex(slice.Range.Start, axisA);
+            var upper = slice.IsSingleton ? lower + 1 : a.GetAbsoluteIndex(slice.Range.End, axisA);
             if (axisA == lastAxis)
             {
                 int n = !slice.IsSingleton ? (upper - lower) / slice.Step + ((upper - lower) % slice.Step == 0 ? 0 : 1) : 1;
@@ -106,8 +106,8 @@ namespace Proxem.NumNet
             Action<int, T1[], int, int, T2[], int, int> op)
         {
             var slice = axisA < singletons.Length ? (Slice)singletons[axisA] : ..;
-            var lower = a.GetAbsoluteIndex(slice.Start, axisA);
-            var upper = slice.IsSingleton ? lower + 1 : a.GetAbsoluteIndex(slice.Stop, axisA);
+            var lower = a.GetAbsoluteIndex(slice.Range.Start, axisA);
+            var upper = slice.IsSingleton ? lower + 1 : a.GetAbsoluteIndex(slice.Range.End, axisA);
             if (axisA == lastAxis)
             {
                 int n = !slice.IsSingleton ? (upper - lower) / slice.Step + ((upper - lower) % slice.Step == 0 ? 0 : 1) : 1;

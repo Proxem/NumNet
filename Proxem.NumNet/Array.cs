@@ -439,7 +439,7 @@ namespace Proxem.NumNet
                     offset += a * this.Stride[i];
                     if (!slice.IsSingleton)    // if singleton, skip axis
                     {
-                        var b = this.GetAbsoluteIndex(slice.Stop, i);
+                        var b = this.GetAbsoluteIndex(slice.Range.End, i);
                         if (slice.Step >= 0)
                         {
                             if (b < a || b > Shape[i])
@@ -541,7 +541,7 @@ namespace Proxem.NumNet
                     offset += a * this.Stride[i];
                     if (!slice.IsSingleton)    // if singleton, skip axis
                     {
-                        var b = this.GetAbsoluteIndex(slice.Stop, i);
+                        var b = this.GetAbsoluteIndex(slice.Range.End, i);
                         if (slice.Step >= 0)
                         {
                             if (b < a || b > Shape[i])
@@ -638,8 +638,7 @@ namespace Proxem.NumNet
                 int count = this.Shape.Length;
                 foreach (var slice in slices)
                 {
-                    if (slice.IsNewAxis) ++count;
-                    else if (slice.IsSingleton) --count;       // Assert(slices[i].Step == 1);
+                    if (slice.IsSingleton) --count;       // Assert(slices[i].Step == 1);
                 }
                 if (count == 0)
                     return new Array<Type>(EmptyArray<int>.Value, this.Values, this.RavelIndicesStart(slices), EmptyArray<int>.Value);
@@ -653,7 +652,83 @@ namespace Proxem.NumNet
                 while (j < count || i < this.Shape.Length)
                 {
                     var slice = k < slices.Length ? slices[k] : ..;
-                    if (slice.IsNewAxis)
+                    var a = this.GetAbsoluteIndex(slice.Range.Start, i);
+                    if (a < 0 || a >= this.Shape[i]) throw new ArgumentException();
+                    offset += a * this.Stride[i];
+                    if (!slice.IsSingleton)    // if singleton, skip axis
+                    {
+                        var b = this.GetAbsoluteIndex(slice.Range.End, i);
+                        if (slice.Step >= 0)
+                        {
+                            if (b < a || b > this.Shape[i])
+                                throw new ArgumentException($"Can't slice axis {i} of shape {Shape[i]} with slice {slice}");
+                        }
+                        else
+                        {
+                            if (a < b || b >= this.Shape[i])
+                                throw new ArgumentException($"Can't slice axis {i} of shape {Shape[i]} with slice {slice}");
+                        }
+                        shape[j] = (b - a) / slice.Step + ((b - a) % slice.Step == 0 ? 0 : 1);
+                        stride[j] = this.Stride[i] * slice.Step;
+                        ++j;
+                    }
+                    ++i;
+                    ++k;
+                }
+
+                return new Array<Type>(shape, this.Values, offset, stride);
+            }
+            set
+            {
+                if (slices.Length > this.Shape.Length) throw new RankException("too many indices");
+                var lastAxis = this.Shape.Length - 1;
+                int offset = 0;
+                while (lastAxis != 0 && lastAxis < slices.Length && slices[lastAxis].IsSingleton)
+                {
+                    offset += this.GetAbsoluteIndex(slices[lastAxis].Range.Start, lastAxis) * this.Stride[lastAxis];
+                    --lastAxis;
+                }
+                Array_.ElementwiseOp(0, 0, lastAxis, this, offset, slices, value, 0,
+                    (n, x, offsetx, incx, y, offsety, incy) =>
+                    {
+                        //Blas.copy(n, b, offsetb, incb, a, offseta, inca);
+                        if (incx == 1 && incy == 1)
+                            Array.Copy(y, offsety, x, offsetx, n);
+                        else
+                            for (int i = 0; i < n; i++)
+                            {
+                                x[offsetx] = y[offsety];
+                                offsetx += incx;
+                                offsety += incy;
+                            }
+                    });
+            }
+        }
+
+        [IndexerName("Slice")]
+        public Array<Type> this[params Slice?[] slices]
+        {
+            get
+            {
+                int count = this.Shape.Length;
+                foreach (var slice in slices)
+                {
+                    if (slice == null) ++count;     // means NewAxis
+                    else if (slice.Value.IsSingleton) --count;       // Assert(slices[i].Step == 1);
+                }
+                if (count == 0)
+                    return new Array<Type>(EmptyArray<int>.Value, this.Values, this.RavelIndicesStart(slices), EmptyArray<int>.Value);
+
+                var shape = new int[count];
+                var offset = this.Offset;
+                var stride = new int[count];
+                int i = 0;
+                int j = 0;
+                int k = 0;
+                while (j < count || i < this.Shape.Length)
+                {
+                    var slice_ = k < slices.Length ? slices[k] : ..;
+                    if (slice_ == null) // NewAxis
                     {
                         shape[j] = 1;
                         stride[j] = 0;
@@ -661,12 +736,13 @@ namespace Proxem.NumNet
                     }
                     else
                     {
-                        var a = this.GetAbsoluteIndex(slice.Start, i);
+                        var slice = (Slice)slice_;
+                        var a = this.GetAbsoluteIndex(slice.Range.Start, i);
                         if (a < 0 || a >= this.Shape[i]) throw new ArgumentException();
                         offset += a * this.Stride[i];
                         if (!slice.IsSingleton)    // if singleton, skip axis
                         {
-                            var b = this.GetAbsoluteIndex(slice.Stop, i);
+                            var b = this.GetAbsoluteIndex(slice.Range.End, i);
                             if (slice.Step >= 0)
                             {
                                 if (b < a || b > this.Shape[i])
@@ -687,31 +763,6 @@ namespace Proxem.NumNet
                 }
 
                 return new Array<Type>(shape, this.Values, offset, stride);
-            }
-            set
-            {
-                if (slices.Length > this.Shape.Length) throw new RankException("too many indices");
-                var lastAxis = this.Shape.Length - 1;
-                int offset = 0;
-                while (lastAxis != 0 && lastAxis < slices.Length && slices[lastAxis].IsSingleton)
-                {
-                    offset += this.GetAbsoluteIndex(slices[lastAxis].Start, lastAxis) * this.Stride[lastAxis];
-                    --lastAxis;
-                }
-                Array_.ElementwiseOp(0, 0, lastAxis, this, offset, slices, value, 0,
-                    (n, x, offsetx, incx, y, offsety, incy) =>
-                    {
-                        //Blas.copy(n, b, offsetb, incb, a, offseta, inca);
-                        if (incx == 1 && incy == 1)
-                            Array.Copy(y, offsety, x, offsetx, n);
-                        else
-                            for (int i = 0; i < n; i++)
-                            {
-                                x[offsetx] = y[offsety];
-                                offsetx += incx;
-                                offsety += incy;
-                            }
-                    });
             }
         }
 
