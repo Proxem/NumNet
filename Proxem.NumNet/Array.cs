@@ -955,7 +955,7 @@ namespace Proxem.NumNet
                                         var index = ia.Values[ia.Offset + axis0 * stride[0] + axis1 * stride[1] + axis2 * stride[2]];
                                         if (index.IsFromEnd)
                                             offset += this.Stride[i] * (index.Value + this.Shape[i]);
-                                        else 
+                                        else
                                             offset += this.Stride[i] * index.Value;
                                     }
                                     //result.Item[axis0, axis1, axis2] = this.Item[indices];
@@ -1119,7 +1119,7 @@ namespace Proxem.NumNet
 
             if (forceCopy || (needCopy && allowCopy))
             {
-                if(IsContiguous() && Stride[NDim - 1] == 1)
+                if (IsContiguous() && Stride[NDim - 1] == 1)
                 {
                     var copiedValues = new Type[newsize];
                     Array.Copy(this.Values, this.Offset, copiedValues, 0, newsize);
@@ -1134,7 +1134,7 @@ namespace Proxem.NumNet
             else if (!needCopy)
             {
                 var stride = new int[shape.Length];
-                if(stride.Length > 0 && this.NDim > 0)
+                if (stride.Length > 0 && this.NDim > 0)
                     stride[stride.Length - 1] = this.Stride[this.NDim - 1];
                 for (int i = stride.Length - 2; i >= 0; i--)
                     stride[i] = stride[i + 1] * shape[i + 1];
@@ -1494,7 +1494,7 @@ namespace Proxem.NumNet
                 var result = NN.Zeros<Type>(indices.Shape);
                 Array_.ElementwiseOp(indices, result, (n, ids, offIds, incIds, res, offRes, incRes) =>
                 {
-                    for(int i=0; i < n; ++i)
+                    for (int i = 0; i < n; ++i)
                     {
                         res[offRes] = thiz[ids[offIds]];
                         offIds += incIds;
@@ -1513,7 +1513,8 @@ namespace Proxem.NumNet
 
     public static class CopyExtension
     {
-        public static T[] CopyToNew<T>(this T[] thiz){
+        public static T[] CopyToNew<T>(this T[] thiz)
+        {
             var v = new T[thiz.Length];
             thiz.CopyTo(v, 0);
             return v;

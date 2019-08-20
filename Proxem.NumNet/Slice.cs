@@ -18,26 +18,17 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Proxem.NumNet
 {
-#if CSharp6
-    public struct Slice(int start, int stop)
-    {
-        public int Start = start;
-        public int Stop = stop;
-#else
     public struct Slice
     {
         public Range Range;
         public int Step;
 
         public const int MinusOne = int.MaxValue;
-        public static readonly Slice NewAxis = (0..0, NewAxisStep);
+        public static readonly Slice NewAxis = (0..0, NewAxisStep); // TODO: use null
 
         private const int NewAxisStep = int.MaxValue;
 
@@ -79,6 +70,5 @@ namespace Proxem.NumNet
             }
             return result.ToString();
         }
-#endif
     }
 }
