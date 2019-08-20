@@ -31,7 +31,7 @@ namespace Proxem.NumNet
 
         public static Slice Downward(int step = -1)
         {
-            if (step >= 0) throw new Exception($"Negative step excepted, got {step}");
+            if (step >= 0) throw new Exception($"Negative step expected, got {step}");
             return (^1..MinusOne, step);
         }
 
