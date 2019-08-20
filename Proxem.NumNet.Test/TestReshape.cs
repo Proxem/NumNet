@@ -65,8 +65,8 @@ namespace Proxem.NumNet.Test
         public void CanReshapeReversedArray()
         {
             var a = NN.Zeros<int>(6);
-            a[Downward()] = NN.Range(6);
-            a = a[Downward()];
+            a[Downward(..)] = NN.Range(6);
+            a = a[Downward(..)];
 
             var b = NN.Array(new[,] {
                 { 0, 1, 2 },

@@ -364,7 +364,7 @@ namespace Proxem.NumNet.Test
             AssertArray.AreEqual(NN.Array( 7, 6, 5, 4 ), x[(^3..3, -1)]);
             AssertArray.AreEqual(NN.Array( 5, 6, 7, 8, 9 ), x[5..]);
             AssertArray.AreEqual(NN.Array( 5, 7, 9 ), x[(5.., step: 2)]);
-            AssertArray.AreEqual(NN.Array( 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ), x[Downward()]);
+            AssertArray.AreEqual(NN.Array( 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ), x[Downward(..)]);
 
             var y = NN.Array(new [,] { { 0, 10 }, { 1, 11 } });
             AssertArray.AreEqual(NN.Array( 1, 11 ), y[(^1..0, -1)], allowBroadcasting: true);
@@ -466,7 +466,7 @@ namespace Proxem.NumNet.Test
             var array = new[] { 0, 1, 2, 3 };
             var a = NN.Ones(1);
             var b = NN.Ones(1);
-            AssertArray.AreEqual(b, a[Downward()]);
+            AssertArray.AreEqual(b, a[Downward(..)]);
             AssertArray.AreEqual(b, a[..]);
         }
 

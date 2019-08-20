@@ -29,10 +29,32 @@ namespace Proxem.NumNet
 
         public const int MinusOne = int.MaxValue;   // -1 is not accepted for Range.End, use MinusOne instead
 
-        public static Slice Downward(int step = -1)
+        public static Slice Downward(Slice slice)
         {
-            if (step >= 0) throw new Exception($"Negative step expected, got {step}");
-            return (^1..MinusOne, step);
+            if (slice.Step <= 0) throw new Exception($"Positive step expected, got {slice.Step}");
+            var start = slice.Range.End;
+            if (start.IsFromEnd)
+            {
+                start = ^(start.Value + 1);
+            }
+            else
+            {
+                var value = start.Value - 1;
+                if (value == -1) value = MinusOne;
+                start = value;
+            }
+            var end = slice.Range.Start;
+            if (end.IsFromEnd)
+            {
+                end = ^(end.Value + 1);
+            }
+            else
+            {
+                var value = end.Value - 1;
+                if (value == -1) value = MinusOne;
+                end = value;
+            }
+            return (start..end, -slice.Step);
         }
 
         public Slice(Range range, int step = 1)

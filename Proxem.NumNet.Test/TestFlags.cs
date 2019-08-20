@@ -40,7 +40,7 @@ namespace Proxem.NumNet.Test
             a[2..].AssertIsContiguous();
             a[2].AssertIsContiguous();
 
-            a[Downward()].AssertIsContiguous();
+            a[Downward(..)].AssertIsContiguous();
             a[(.., 2)].AssertIsContiguous();
         }
 
@@ -66,7 +66,7 @@ namespace Proxem.NumNet.Test
             a[2.., 1].AssertIsContiguous();
             a[1..3, 2].AssertIsContiguous();
 
-            a[Downward()].AssertIsNotContiguous();
+            a[Downward(..)].AssertIsNotContiguous();
             a[(..,2)].AssertIsNotContiguous();
         }
 
